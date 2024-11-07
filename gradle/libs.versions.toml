@@ -82,7 +82,7 @@ brotli = { module = "org.brotli:dec", version = "0.1.2" }
 palette = { module = "androidx.palette:palette", version = "1.0.0" }
 monet = { module = "com.github.KieronQuinn:MonetCompat", version = "0.4.1" }
 
-desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.2" }
+desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.3" }
 
 detekt_compose = { module = "io.nlopez.compose.rules:detekt", version = "0.4.5" }
 detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
