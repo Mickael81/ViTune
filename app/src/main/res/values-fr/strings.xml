@@ -33,7 +33,7 @@
     <string name="overview">Aperçu</string>
     <string name="library">Bibliothèque</string>
     <string name="discover">Découverte</string>
-    <string name="local"></string>
+    <string name="local">Local</string>
     <string name="quick_picks">Sélections Rapides</string>
     <string name="mood">Humeur</string>
     <string name="online">En Ligne</string>
