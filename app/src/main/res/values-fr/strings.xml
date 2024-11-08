@@ -95,27 +95,27 @@
     <string name="remove_from_playlist">Supprimer de la playlist</string>
 
     <string name="hide_from_quick_picks">Masquer de la "Sélection Rapide"</string>
-    <string name="confirm_hide_song">Do you really want to hide this song? Its playback time and cache will be wiped.\nThis action is irreversible.</string>
-    <string name="confirm_delete_playlist">Do you really want to delete this playlist?</string>
-    <string name="confirm_delete_piped_session">Do you really want to delete this Piped session?</string>
+    <string name="confirm_hide_song">Voulez-vous vraiment masquer cette chanson ? Son temps de lecture et son cache seront effacés.Cette action est irréversible.</string>
+    <string name="confirm_delete_playlist">Voulez-vous vraiment supprimer cette playlist ?</string>
+    <string name="confirm_delete_piped_session">Voulez-vous vraiment supprimer cette session Piped ?</string>
 
-    <string name="other_versions">Other versions</string>
-    <string name="no_alternative_version">This album doesn\'t have any alternative version</string>
+    <string name="other_versions">Autres versions</string>
+    <string name="no_alternative_version">Cet album n'a pas de version alternative</string>
 
-    <string name="from_wikipedia">From Wikipedia</string>
-    <string name="wikipedia_cc_by_sa">From Wikipedia under Creative Commons Attribution CC-BY-SA 3.0</string>
+    <string name="from_wikipedia">D'après Wikipédia</string>
+    <string name="wikipedia_cc_by_sa">De Wikipédia sous licence Creative Commons Attribution CC-BY-SA 3.0</string>
     <string name="quote_open">“</string>
     <string name="quote_close">„</string>
 
-    <string name="moods_and_genres">Moods and genres</string>
-    <string name="new_released_albums">New released albums</string>
-    <string name="more">More</string>
+    <string name="moods_and_genres">Humeurs et Genres</string>
+    <string name="new_released_albums">Nouveaux albums sortis</string>
+    <string name="more">Plus</string>
 
-    <string name="artist_has_no_albums">This artist hasn\'t released an album yet</string>
-    <string name="artist_has_no_singles">This artist hasn\'t released a single yet</string>
+    <string name="artist_has_no_albums">Cet artiste n'a pas encore sorti d'album</string>
+    <string name="artist_has_no_singles">Cet artiste n'a pas encore sorti de single</string>
 
-    <string name="error_message">An error has occurred</string>
-    <string name="error_local_music_deleted">This local music file does not exist anymore</string>
+    <string name="error_message">Une erreur s'est produite</string>
+    <string name="error_local_music_deleted">Ce fichier de musique local n'existe plus</string>
     <string name="error_network">A network error has occurred</string>
     <string name="error_unplayable">Couldn\'t find a playable audio format</string>
     <string name="error_source_deleted">The original video source of this song has been deleted</string>
