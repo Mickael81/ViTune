@@ -24,7 +24,7 @@
     <string name="songs">Titres</string>
     <string name="playlists">Playlists</string>
     <string name="albums">Albums</string>
-    <string name="artists">Artists</string>
+    <string name="artists">Artistes</string>
     <string name="singles">Singles</string>
 
     <string name="favorites">Favoris</string>
@@ -34,7 +34,7 @@
     <string name="library">Bibliothèque</string>
     <string name="discover">Découverte</string>
     <string name="local">Local</string>
-    <string name="quick_picks">Sélections Rapides</string>
+    <string name="quick_picks">Sélection Rapide</string>
     <string name="mood">Humeur</string>
     <string name="online">En Ligne</string>
     <string name="videos">Vidéos</string>
@@ -57,12 +57,12 @@
     <string name="sleep_timer">Minuterie de sommeil</string>
     <string name="sleep_timer_ended">Minuterie de sommeil terminée</string>
     <string name="sleep_timer_until_song_end">Jusqu\'à la fin de la chanson</string>
-    <string name="stop_sleep_timer_prompt">Voulez-vous arrêter la minuterie de mise en veille ?</string>
+    <string name="stop_sleep_timer_prompt">Voulez-vous arrêter la minuterie de sommeil ?</string>
     <string name="equalizer">Égaliseur</string>
-    <string name="set_sleep_timer">Régler la minuterie de mise en veille</string>
+    <string name="set_sleep_timer">Régler la minuterie de sommeil</string>
 
     <string name="cancel">Annuler</string>
-    <string name="done">Fait</string>
+    <string name="done">OK</string>
     <string name="confirm">Confirmer</string>
     <string name="no">Non</string>
     <string name="stop">Arrêter</string>
@@ -95,7 +95,7 @@
     <string name="remove_from_playlist">Supprimer de la playlist</string>
 
     <string name="hide_from_quick_picks">Masquer de la « Sélection Rapide »</string>
-    <string name="confirm_hide_song">Voulez-vous vraiment masquer cette chanson? Son temps de lecture et son cache seront effacés. Cette action est irréversible.</string>
+    <string name="confirm_hide_song">Voulez-vous vraiment masquer ce titre ? Son temps de lecture et son cache seront effacés. Cette action est irréversible.</string>
     <string name="confirm_delete_playlist">Voulez-vous vraiment supprimer cette playlist ?</string>
     <string name="confirm_delete_piped_session">Voulez-vous vraiment supprimer cette session Piped ?</string>
 
@@ -108,7 +108,7 @@
     <string name="quote_close">„</string>
 
     <string name="moods_and_genres">Humeurs et Genres</string>
-    <string name="new_released_albums">Nouveaux albums sortis</string>
+    <string name="new_released_albums">Nouveautés</string>
     <string name="more">Plus</string>
 
     <string name="artist_has_no_albums">Cet artiste n\'a pas encore sorti d\'album</string>
@@ -118,8 +118,8 @@
     <string name="error_local_music_deleted">Ce fichier de musique local n\'existe plus</string>
     <string name="error_network">Une erreur réseau s\'est produite</string>
     <string name="error_unplayable">Impossible de trouver un format audio lisible</string>
-    <string name="error_source_deleted">La source vidéo originale de cette chanson a été supprimée</string>
-    <string name="error_server_restrictions">Cette chanson ne peut pas être jouée en raison de restrictions du serveur</string>
+    <string name="error_source_deleted">La source vidéo originale de ce titre a été supprimée</string>
+    <string name="error_server_restrictions">Ce titre ne peut pas être joué en raison de restrictions du serveur</string>
     <string name="error_id_mismatch">L\'ID vidéo renvoyé ne correspond pas à celui demandé</string>
     <string name="error_unknown_playback">Une erreur de lecture inconnue s\'est produite</string>
     <string name="error_piped_link">Une erreur inconnue s\'est produite lors de la connexion de votre compte Piped. Veuillez réessayer.</string>
@@ -138,16 +138,16 @@
     <string name="no_file_chooser_installed">Impossible de trouver une application pour créer des documents</string>
     <string name="no_battery_optimization_settings_found">Impossible de trouver les paramètres d\'optimisation de la batterie. Veuillez ajouter ViTune à la liste blanche manuellement.</string>
 
-    <string name="related_albums">Albums associés</string>
-    <string name="similar_artists">Artistes similaires</string>
+    <string name="related_albums">Albums Associés</string>
+    <string name="similar_artists">Artistes Similaires</string>
     <string name="recommended_playlists">Playlists que vous pourriez aimer</string>
     <string name="format_subscribers">%s abonnés</string>
 
     <string name="enter_lyrics">Entrez les paroles</string>
     <string name="no_lyrics_found">Aucune piste de paroles n\'a pu être trouvée</string>
     <string name="choose_lyric_track">Choisissez la piste lyrique</string>
-    <string name="synchronized_lyrics_not_available">Les paroles synchronisées ne sont pas disponibles pour cette chanson</string>
-    <string name="lyrics_not_available">Les paroles ne sont pas disponibles pour cette chanson</string>
+    <string name="synchronized_lyrics_not_available">Les paroles synchronisées ne sont pas disponibles pour ce titre</string>
+    <string name="lyrics_not_available">Les paroles ne sont pas disponibles pour ce titre</string>
     <string name="invalid_synchronized_lyrics">Paroles synchronisées non valides. Récupérez ou modifiez les paroles et réessayez.</string>
     <string name="show_unsynchronized_lyrics">Afficher les paroles non synchronisées</string>
     <string name="show_synchronized_lyrics">Afficher les paroles synchronisées</string>
@@ -169,7 +169,7 @@
 
     <string name="id">Id</string>
     <string name="itag">Itag</string>
-    <string name="bitrate">Bitrate</string>
+    <string name="bitrate">Débit</string>
     <string name="size">Taille</string>
     <string name="cached">Caché</string>
     <string name="loudness">Intensité</string>
@@ -206,7 +206,7 @@
 
     <string name="thumbnail_roundness">Rondeur des vignettes</string>
     <string name="none">Aucun</string>
-    <string name="thumbnail_roundness_light">Light</string>
+    <string name="thumbnail_roundness_light">Léger</string>
     <string name="thumbnail_roundness_medium">Moyen</string>
     <string name="thumbnail_roundness_heavy">Épais</string>
     <string name="thumbnail_roundness_heavier">Encore plus épais</string>
@@ -221,8 +221,8 @@
     <string name="language">Langue</string>
 
     <string name="lockscreen">Écran de verrouillage</string>
-    <string name="show_song_cover">Afficher la pochette de la chanson</string>
-    <string name="show_song_cover_description">Utiliser la pochette de la chanson en cours de lecture comme fond d\'écran de verrouillage</string>
+    <string name="show_song_cover">Afficher la pochette du titre</string>
+    <string name="show_song_cover_description">Utiliser la pochette du titre en cours de lecture comme fond d\'écran de verrouillage</string>
 
     <string name="player">Lecteur</string>
     <string name="previous_button_while_collapsed">Bouton précédent en mode réduit</string>
@@ -246,19 +246,19 @@
     <string name="max_size">Taille maximale</string>
     <string name="format_cache_space_used">%1$s utilisés</string>
     <string name="format_cache_space_used_percentage">%1$s utilisés (%2$s%%)</string>
-    <string name="song_cache">Cache de chansons</string>
+    <string name="song_cache">Cache des titres</string>
     <string name="pause_song_cache">Cache de mise en pause</string>
-    <string name="pause_song_cache_description">Suspend temporairement l\'ajout de nouvelles chansons au cache</string>
+    <string name="pause_song_cache_description">Suspend temporairement l\'ajout de nouveaux titres au cache</string>
     <string name="database">Base de données</string>
 
     <string name="cleanup">Nettoyage</string>
     <string name="pause_playback_history">Mettre en pause l\'historique de lecture</string>
-    <string name="pause_playback_history_description">Arrête la lecture des événements utilisés pour les sélections rapides</string>
-    <string name="pause_playback_history_warning">Attention : cela n’affectera pas la mise en cache hors ligne!</string>
-    <string name="reset_quick_picks">Réinitialiser les sélections rapides</string>
-    <string name="quick_picks_empty">Les sélections rapides sont effacées</string>
+    <string name="pause_playback_history_description">Arrête la lecture des événements utilisés pour la sélection rapide</string>
+    <string name="pause_playback_history_warning">Attention : cela n’affectera pas la mise en cache hors ligne !</string>
+    <string name="reset_quick_picks">Réinitialiser la sélection rapide</string>
+    <string name="quick_picks_empty">La sélection rapide est effacée</string>
     <string name="pause_playback_time">Mettre en pause le temps de lecture</string>
-    <string name="format_pause_playback_time_description">Arrête l\'enregistrement du temps de lecture. Cela met en pause les statistiques de la playlist « Mes %1$s préférés »!</string>
+    <string name="format_pause_playback_time_description">Arrête l\'enregistrement du temps de lecture. Cela met en pause les statistiques de la playlist « Mes %1$s préférés » !</string>
 
     <string name="backup">Sauvegarde</string>
     <string name="backup_description">Les préférences personnelles (c\'est-à-dire le mode thème) et le cache sont exclus.</string>
@@ -296,7 +296,7 @@
     <string name="need_help_description">La plupart du temps, ce n\'est pas la faute du développeur si l\'application cesse de fonctionner correctement en arrière-plan (même après avoir activé le service invincible). Aussi, vérifiez si le fabricant de votre appareil supprime vos applications (cliquez pour rediriger).</string>
     <string name="service_lifetime_report_issue">Si vous pensez vraiment qu\'il y a quelque chose qui ne va pas avec l\'application elle-même, accédez à l\'onglet À propos</string>
     <string name="troubleshooting">Dépannage</string>
-    <string name="troubleshooting_warning">Attention : utilisez ces boutons en dernier recours lorsque la lecture audio échoue</string>
+    <string name="troubleshooting_warning">Attention : utilisez ces boutons en dernier recours lorsque la lecture audio échoue !</string>
     <string name="reload_app_internals">Recharger les composants internes de l\'application</string>
     <string name="kill_app">Tuer l\'application</string>
     <string name="show_logs">Afficher les journaux de débogage</string>
@@ -304,7 +304,7 @@
     <string name="show_troubleshoot_section">Afficher la section de dépannage</string>
 
     <string name="persistent_queue">File d\'attente persistante</string>
-    <string name="persistent_queue_description">Sauvegarder et restaurer les chansons en cours de lecture</string>
+    <string name="persistent_queue_description">Sauvegarder et restaurer les titres en cours de lecture</string>
     <string name="resume_playback">Reprendre la lecture</string>
     <string name="resume_playback_description">Lorsqu\'un appareil filaire ou Bluetooth est connecté</string>
     <string name="stop_when_closed">Arrêter quand fermée</string>
@@ -315,13 +315,13 @@
     <string name="skip_silence_description">Ignorer les parties silencieuses pendant la lecture</string>
     <string name="minimum_silence_length">Durée minimale du silence</string>
     <string name="minimum_silence_length_description">Le temps minimum pendant lequel l\'audio doit être silencieux pour être ignoré</string>
-    <string name="minimum_silence_length_warning">L\'application doit être redémarrée pour que les modifications soient effectives!</string>
+    <string name="minimum_silence_length_warning">L\'application doit être redémarrée pour que les modifications soient effectives !</string>
     <string name="restart_service">Redémarrer le service</string>
     <string name="loudness_normalization">Normalisation du niveau sonore</string>
     <string name="loudness_normalization_description">Réglez le volume à un niveau fixe</string>
     <string name="loudness_base_gain">Gain de base du niveau sonore</string>
     <string name="loudness_base_gain_description">Le gain « cible » pour la normalisation du volume sonore</string>
-    <string name="loudness_normalization_extreme">Valeur de volume sonore extrême détectée (%s). Désactivation de la normalisation pour cette chanson.</string>
+    <string name="loudness_normalization_extreme">Valeur de volume sonore extrême détectée (%s). Désactivation de la normalisation pour ce titre.</string>
     <string name="bass_boost">Amplification des basses</string>
     <string name="bass_boost_description">Amplifiez les basses fréquences pour améliorer l\'expérience d\'écoute</string>
     <string name="bass_boost_level">Niveau d\'amplification des basses</string>
@@ -338,8 +338,8 @@
     <string name="last_interaction">Joués Dernièrement</string>
     <string name="trending">Tendance</string>
     <string name="quick_picks_source">Source de Sélection Rapide</string>
-    <string name="quick_picks_cache">Mettre en cache les données de sélection rapide</string>
-    <string name="quick_picks_cache_description">Enregistre les données de sélection rapide sur le disque pour un accès hors-ligne</string>
+    <string name="quick_picks_cache">Mettre en cache les données de la sélection rapide</string>
+    <string name="quick_picks_cache_description">Enregistre les données de la sélection rapide sur le disque pour un accès hors-ligne</string>
 
     <string name="player_layout">Disposition du lecteur</string>
     <string name="classic_player_layout_name">Classique</string>
@@ -355,7 +355,7 @@
     <string name="add_account">Ajouter un compte</string>
     <string name="add_account_description">Liez un compte Piped avec votre instance, votre nom d\'utilisateur et votre mot de passe.</string>
     <string name="learn_more">En savoir plus</string>
-    <string name="learn_more_description">Vous ne savez pas ce qu\'est Piped ou vous n\'avez pas de compte ? Cliquez ici pour être redirigé vers leur documentation</string>
+    <string name="learn_more_description">Vous ne savez pas ce qu\'est Piped ou vous n\'avez pas de compte ? Cliquez ici pour être redirigé vers leur documentation.</string>
     <string name="piped_sessions">Sessions Piped</string>
     <string name="custom_instance">Utiliser une instance personnalisée</string>
     <string name="base_api_url">Instance URL API</string>
@@ -377,20 +377,20 @@
     <string name="reset_blacklist">Réinitialiser la liste noire</string>
     <string name="blacklist_empty">Liste noire vide</string>
 
-    <string name="pre_cache">Pre cache</string>
+    <string name="pre_cache">Pré-cache</string>
 
-    <string name="swipe_to_hide_song">Glisser pour masquer la chanson</string>
-    <string name="swipe_to_hide_song_description">Lorsque vous faites glisser une chanson vers la gauche, elle est supprimée de la base de données et du cache.</string>
-    <string name="swipe_to_hide_song_confirm">Confirmer le balayage pour masquer la chanson</string>
+    <string name="swipe_to_hide_song">Glisser pour masquer le titre</string>
+    <string name="swipe_to_hide_song_description">Lorsque vous faites glisser un titre vers la gauche, il est supprimé de la base de données et du cache.</string>
+    <string name="swipe_to_hide_song_confirm">Confirmer le balayage pour masquer le titre</string>
     <string name="swipe_to_hide_song_confirm_description">Lorsque vous faites glisser pour masquer, vous devez d\'abord confirmer</string>
-    <string name="hide_explicit">Masquer les chansons explicites</string>
-    <string name="hide_explicit_description">Masque toutes les chansons explicites dans toute l\'application. Le lecteur ignorera également les chansons explicites lorsqu\'il en rencontrera une et que ce paramètre est activé.</string>
+    <string name="hide_explicit">Masquer les titres explicites</string>
+    <string name="hide_explicit_description">Masque tous les titres explicites dans toute l\'application. Le lecteur ignorera également les titres explicites lorsqu\'il en rencontrera un et que ce paramètre est activé.</string>
 
     <string name="version">Version</string>
     <string name="check_new_version">Rechercher des mises à jour</string>
     <string name="current_version">Vous utilisez actuellement la version v%1$s</string>
     <string name="error_github">Une erreur inconnue s\'est produite lors de la récupération des données depuis GitHub</string>
-    <string name="new_version_available">Une nouvelle version est disponible</string>
+    <string name="new_version_available">Une nouvelle version est disponible !</string>
     <string name="more_information">Plus d\'informations</string>
     <string name="up_to_date">Vous êtes actuellement à jour : aucune mise à jour disponible</string>
 
@@ -404,9 +404,9 @@
     <string name="version_check">Rechercher automatiquement les mises à jour</string>
 
     <string name="skip_on_error">Saut automatique</string>
-    <string name="skip_on_error_description">Saute la chanson en cours en cas d\'erreur.</string>
+    <string name="skip_on_error_description">Saute le titre en cours en cas d\'erreur</string>
     <string name="skip_on_error_notification">%s ignoré à cause d\'une erreur</string>
-    <string name="skip_on_error_notification_unknown_song">Chanson actuelle ignorée à cause d\'une erreur</string>
+    <string name="skip_on_error_notification_unknown_song">Titre actuel ignoré à cause d\'une erreur</string>
     <string name="reverb_small_room">Petite pièce</string>
     <string name="reverb_medium_room">Pièce moyenne</string>
     <string name="reverb_large_room">Grande pièce</string>
@@ -417,8 +417,8 @@
     <string name="tabs">Onglets</string>
 
     <plurals name="format_reset_blacklist_description">
-        <item quantity="one">Supprimer la chanson %1$s de la liste noire</item>
-        <item quantity="many">Supprimer toutes les chansons %1$s de la liste noire</item>
+        <item quantity="one">Supprimer le titre %1$s de la liste noire</item>
+        <item quantity="many">Supprimer tous les titres %1$s de la liste noire</item>
     </plurals>
 
     <plurals name="format_reset_quick_picks_amount">
@@ -427,7 +427,7 @@
     </plurals>
 
     <plurals name="song_count_plural">
-        <item quantity="one">%1$d chanson</item>
-        <item quantity="many">%1$d chansons</item>
+        <item quantity="one">%1$d titre</item>
+        <item quantity="many">%1$d titres</item>
     </plurals>
 </resources>
