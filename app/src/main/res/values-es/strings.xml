@@ -173,6 +173,7 @@
     <string name="size">Tamaño</string>
     <string name="cached">En caché</string>
     <string name="loudness">Volumen</string>
+    <string name="reload">Recargar</string>
 
     <string name="view_album">Ver álbum</string>
     <string name="view_playlist">Ver lista de reproducción</string>
@@ -236,6 +237,8 @@
     <string name="lyrics_keep_screen_awake_description">Mantiene la pantalla activa mientras se muestran las letras</string>
     <string name="lyrics_show_system_bars">Mostrar barras del sistema (letras)</string>
     <string name="lyrics_show_system_bars_description">Desactivar esto habilita la pantalla completa en todo el sistema</string>
+    <string name="pip">Pantalla en pantalla (PIP)</string>
+    <string name="pip_description">Cambia automáticamente al modo Pantalla en pantalla al cambiar al segundo plano</string>
 
     <string name="cache">Caché</string>
     <string name="cache_description">Cuando la caché se queda sin espacio, se eliminan los recursos a los que no se ha accedido durante más tiempo</string>
@@ -244,6 +247,8 @@
     <string name="format_cache_space_used">%1$s usado</string>
     <string name="format_cache_space_used_percentage">%1$s usado (%2$s%%)</string>
     <string name="song_cache">Caché de canciones</string>
+    <string name="pause_song_cache">Pausar caché</string>
+    <string name="pause_song_cache_description">Detiene temporalmente la adición de nuevas canciones a la caché</string>
     <string name="database">Base de datos</string>
 
     <string name="cleanup">Limpieza</string>
@@ -294,6 +299,8 @@
     <string name="troubleshooting_warning">Precaución: usa estos botones como último recurso cuando falla la reproducción de audio</string>
     <string name="reload_app_internals">Recargar internos de la aplicación</string>
     <string name="kill_app">Forzar cierre de la aplicación</string>
+    <string name="show_logs">Ver registros de depuración</string>
+    <string name="logs">Registros</string>
     <string name="show_troubleshoot_section">Mostrar sección de solución de problemas</string>
 
     <string name="persistent_queue">Cola persistente</string>
@@ -319,6 +326,9 @@
     <string name="bass_boost_description">Reforzar frecuencias bajas para mejorar la experiencia de escucha</string>
     <string name="bass_boost_level">Nivel de refuerzo de graves</string>
     <string name="bass_boost_level_description">Nivel (0–1000) de refuerzo de frecuencias bajas; ¡usar bajo tu propio riesgo!</string>
+    <string name="sponsor_block">Sponsorblock</string>
+    <string name="sponsor_block_description">Salta contenido patrocinado/fuera de tema usando los datos de la API de Sponsorblock</string>
+    <string name="reverb">Reverberación</string>
     <string name="audio_focus">Enfoque de audio</string>
     <string name="audio_focus_description">Si el reproductor debe solicitar el enfoque de audio (multimedia) en todo el sistema</string>
     <string name="equalizer_description">Interactuar con el ecualizador del sistema</string>
@@ -373,6 +383,8 @@
     <string name="swipe_to_hide_song_description">Cuando deslizas una canción hacia la izquierda, se elimina de la base de datos y la caché</string>
     <string name="swipe_to_hide_song_confirm">Confirmar deslizamiento para ocultar canción</string>
     <string name="swipe_to_hide_song_confirm_description">Cuando deslizas para ocultar, primero tienes que confirmar</string>
+    <string name="hide_explicit">Ocultar canciones explícitas</string>
+    <string name="hide_explicit_description">Oculta todas las canciones explícitas en toda la app. El reproductor también se saltará canciones explícitas cuando encuentre una y esta configuración esté habilitada.</string>
 
     <string name="version">Versión</string>
     <string name="check_new_version">Buscar actualizaciones</string>
@@ -395,12 +407,14 @@
     <string name="skip_on_error_description">Salta la canción actual cuando hay un error.</string>
     <string name="skip_on_error_notification">Se saltó %s debido a un error</string>
     <string name="skip_on_error_notification_unknown_song">Se saltó la canción actual debido a un error</string>
-    <string name="reverb_small_room">Small room</string>
-    <string name="reverb_medium_room">Medium room</string>
-    <string name="reverb_large_room">Large room</string>
-    <string name="reverb_medium_hall">Medium hall</string>
-    <string name="reverb_large_hall">Large hall</string>
-    <string name="reverb_plate">Plate</string>
+    <string name="reverb_small_room">Habitación pequeña</string>
+    <string name="reverb_medium_room">Habitación mediana</string>
+    <string name="reverb_large_room">Habitación grande</string>
+    <string name="reverb_medium_hall">Sala mediana</string>
+    <string name="reverb_large_hall">Sala grande</string>
+    <string name="reverb_plate">Placa</string>
+
+    <string name="tabs">Pestañas</string>
 
     <plurals name="format_reset_blacklist_description">
         <item quantity="one">Eliminar %1$s canción de la lista negra</item>

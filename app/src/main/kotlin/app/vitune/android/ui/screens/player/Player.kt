@@ -471,6 +471,7 @@ fun Player(
                     if (it <= 0.01f) stringResource(R.string.minimum_speed_value)
                     else stringResource(R.string.format_multiplier, "%.2f".format(it))
                 },
+                steps = 39,
                 label = stringResource(R.string.playback_speed)
             )
             SliderDialogBody(
@@ -482,6 +483,7 @@ fun Player(
                     if (it <= 0.01f) stringResource(R.string.minimum_speed_value)
                     else stringResource(R.string.format_multiplier, "%.2f".format(it))
                 },
+                steps = 39,
                 label = stringResource(R.string.playback_pitch)
             )
             Box(
