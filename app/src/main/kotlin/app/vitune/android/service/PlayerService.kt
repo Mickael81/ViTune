@@ -1026,6 +1026,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                 )
                 .setStyle(
                     androidx.media.app.NotificationCompat.MediaStyle()
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setMediaSession(MediaSessionCompat.Token.fromToken(mediaSession.sessionToken))
                 )
         }
