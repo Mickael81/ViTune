@@ -337,7 +337,7 @@ fun MediaItemMenu(
             val slideDirection = if (targetState) Left else Right
 
             slideIntoContainer(slideDirection, animationSpec) togetherWith
-                    slideOutOfContainer(slideDirection, animationSpec)
+                slideOutOfContainer(slideDirection, animationSpec)
         },
         label = ""
     ) { currentIsViewingPlaylists ->

@@ -104,9 +104,9 @@ fun QuickPicks(
         if (
             DataPreferences.shouldCacheQuickPicks && !DataPreferences.cachedQuickPicks.let {
                 it.albums.isNullOrEmpty() &&
-                        it.artists.isNullOrEmpty() &&
-                        it.playlists.isNullOrEmpty() &&
-                        it.songs.isNullOrEmpty()
+                    it.artists.isNullOrEmpty() &&
+                    it.playlists.isNullOrEmpty() &&
+                    it.songs.isNullOrEmpty()
             }
         ) relatedPageResult = Result.success(DataPreferences.cachedQuickPicks)
 

@@ -21,13 +21,13 @@ data class MusicShelfRenderer(
                 ?.text
                 ?.runs
                 .orEmpty() to
-                    musicResponsiveListItemRenderer
-                        ?.flexColumns
-                        ?.let { it.getOrNull(1) ?: it.lastOrNull() }
-                        ?.musicResponsiveListItemFlexColumnRenderer
-                        ?.text
-                        ?.splitBySeparator()
-                        .orEmpty()
+                musicResponsiveListItemRenderer
+                    ?.flexColumns
+                    ?.let { it.getOrNull(1) ?: it.lastOrNull() }
+                    ?.musicResponsiveListItemFlexColumnRenderer
+                    ?.text
+                    ?.splitBySeparator()
+                    .orEmpty()
 
         val thumbnail: Thumbnail?
             get() = musicResponsiveListItemRenderer

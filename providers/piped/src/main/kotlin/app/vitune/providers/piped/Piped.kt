@@ -26,8 +26,8 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpMethod
 import io.ktor.http.URLBuilder
 import io.ktor.http.Url
+import io.ktor.http.appendPathSegments
 import io.ktor.http.contentType
-import io.ktor.http.path
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -37,7 +37,7 @@ import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import java.util.UUID
 
-operator fun Url.div(path: String) = URLBuilder(this).apply { path(path) }.build()
+operator fun Url.div(path: String) = URLBuilder(this).apply { appendPathSegments(path) }.build()
 operator fun JsonElement.div(key: String) = jsonObject[key]!!
 
 object Piped {
@@ -94,15 +94,10 @@ object Piped {
     suspend fun login(apiBaseUrl: Url, username: String, password: String) =
         runCatchingCancellable {
             apiBaseUrl authenticatedWith (
-                    client.post(apiBaseUrl / "login") {
-                        setBody(
-                            mapOf(
-                                "username" to username,
-                                "password" to password
-                            )
-                        )
-                    }.body<JsonElement>() / "token"
-                    ).jsonPrimitive.content
+                client.post(apiBaseUrl / "login") {
+                    setBody(mapOf("username" to username, "password" to password))
+                }.body<JsonElement>() / "token"
+                ).jsonPrimitive.content
         }
 
     val playlist = Playlists()

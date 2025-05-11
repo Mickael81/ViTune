@@ -16,8 +16,8 @@ import io.ktor.client.request.setBody
 
 suspend fun <T : Innertube.Item> Innertube.itemsPage(
     body: BrowseBody,
-    fromMusicResponsiveListItemRenderer: (MusicResponsiveListItemRenderer) -> T? = { null },
-    fromMusicTwoRowItemRenderer: (MusicTwoRowItemRenderer) -> T? = { null }
+    fromListRenderer: (MusicResponsiveListItemRenderer) -> T? = { null },
+    fromTwoRowRenderer: (MusicTwoRowItemRenderer) -> T? = { null }
 ) = runCatchingCancellable {
     val response = client.post(BROWSE) {
         setBody(body)
@@ -39,15 +39,15 @@ suspend fun <T : Innertube.Item> Innertube.itemsPage(
             ?.musicShelfRenderer,
         gridRenderer = sectionListRendererContent
             ?.gridRenderer,
-        fromMusicResponsiveListItemRenderer = fromMusicResponsiveListItemRenderer,
-        fromMusicTwoRowItemRenderer = fromMusicTwoRowItemRenderer
+        fromMusicResponsiveListItemRenderer = fromListRenderer,
+        fromMusicTwoRowItemRenderer = fromTwoRowRenderer
     )
 }
 
 suspend fun <T : Innertube.Item> Innertube.itemsPage(
     body: ContinuationBody,
-    fromMusicResponsiveListItemRenderer: (MusicResponsiveListItemRenderer) -> T? = { null },
-    fromMusicTwoRowItemRenderer: (MusicTwoRowItemRenderer) -> T? = { null }
+    fromListRenderer: (MusicResponsiveListItemRenderer) -> T? = { null },
+    fromTwoRowRenderer: (MusicTwoRowItemRenderer) -> T? = { null }
 ) = runCatchingCancellable {
     val response = client.post(BROWSE) {
         setBody(body)
@@ -58,8 +58,8 @@ suspend fun <T : Innertube.Item> Innertube.itemsPage(
             .continuationContents
             ?.musicShelfContinuation,
         gridRenderer = null,
-        fromMusicResponsiveListItemRenderer = fromMusicResponsiveListItemRenderer,
-        fromMusicTwoRowItemRenderer = fromMusicTwoRowItemRenderer
+        fromMusicResponsiveListItemRenderer = fromListRenderer,
+        fromMusicTwoRowItemRenderer = fromTwoRowRenderer
     )
 }
 

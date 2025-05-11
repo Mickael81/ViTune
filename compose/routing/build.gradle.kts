@@ -7,14 +7,17 @@ plugins {
 
 android {
     namespace = "app.vitune.compose.routing"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
     }
 
     kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xcontext-receivers")
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-Xcontext-receivers",
+            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
+        )
     }
 }
 

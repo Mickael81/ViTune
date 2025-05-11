@@ -156,8 +156,8 @@ object LrcParser {
             val results = lyricRegex.find(line)?.groups ?: error("Invalid lyric")
             val (minutes, seconds, millis, lyric) = results.drop(1).take(4).mapNotNull { it?.value }
             val duration = minutes.toInt().minutes +
-                    seconds.toInt().seconds +
-                    millis.padEnd(length = 3, padChar = '0').toInt().milliseconds
+                seconds.toInt().seconds +
+                millis.padEnd(length = 3, padChar = '0').toInt().milliseconds
 
             Line.Lyric(
                 timestamp = duration.inWholeMilliseconds,

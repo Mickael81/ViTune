@@ -13,15 +13,15 @@ android {
     val appId = "${project.group}.android"
 
     namespace = appId
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = appId
 
         minSdk = 21
-        targetSdk = 35
+        targetSdk = 36
 
-        versionCode = System.getenv("ANDROID_VERSION_CODE")?.toIntOrNull() ?: 14
+        versionCode = System.getenv("ANDROID_VERSION_CODE")?.toIntOrNull() ?: 15
         versionName = project.version.toString()
 
         multiDexEnabled = true
@@ -99,7 +99,8 @@ kotlin {
         freeCompilerArgs.addAll(
             "-Xcontext-receivers",
             "-Xnon-local-break-continue",
-            "-Xconsistent-data-class-copy-visibility"
+            "-Xconsistent-data-class-copy-visibility",
+            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
         )
     }
 }

@@ -104,7 +104,7 @@ fun OnlineSearch(
         runCatching {
             Url(textFieldValue.text).takeIf {
                 it.host.endsWith("youtube.com", ignoreCase = true) &&
-                        it.segments.lastOrNull()?.equals("playlist", ignoreCase = true) == true
+                    it.segments.lastOrNull()?.equals("playlist", ignoreCase = true) == true
             }?.parameters?.get("list")
         }.getOrNull()
     }

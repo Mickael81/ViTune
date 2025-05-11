@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "com.google.android.material"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
@@ -16,7 +16,10 @@ android {
     }
 
     kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xcontext-receivers")
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-Xcontext-receivers",
+            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
+        )
     }
 }
 

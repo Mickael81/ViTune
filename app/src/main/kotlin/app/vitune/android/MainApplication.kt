@@ -158,7 +158,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
             vm.binder = null
             // Try to rebind, otherwise fail
             unbindService(this)
-            bindService(intent<PlayerService>(), this, Context.BIND_AUTO_CREATE)
+            bindService(intent<PlayerService>(), this, BIND_AUTO_CREATE)
         }
     }
 
@@ -167,7 +167,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
 
     override fun onStart() {
         super.onStart()
-        bindService(intent<PlayerService>(), serviceConnection, Context.BIND_AUTO_CREATE)
+        bindService(intent<PlayerService>(), serviceConnection, BIND_AUTO_CREATE)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -350,7 +350,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
                         }
 
                         reason == Player.MEDIA_ITEM_TRANSITION_REASON_PLAYLIST_CHANGED &&
-                                mediaItem.mediaMetadata.extras?.songBundle?.isFromPersistentQueue != true -> {
+                            mediaItem.mediaMetadata.extras?.songBundle?.isFromPersistentQueue != true -> {
                             if (AppearancePreferences.openPlayer) playerBottomSheetState.expandSoft()
                             else Unit
                         }
@@ -403,8 +403,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
                     ).joinToString(separator = " ")
 
                     @Suppress("deprecation")
-                    MediaStore.Audio.Playlists.ENTRY_CONTENT_TYPE
-                        -> extras.playlist
+                    MediaStore.Audio.Playlists.ENTRY_CONTENT_TYPE -> extras.playlist
 
                     else -> null
                 }

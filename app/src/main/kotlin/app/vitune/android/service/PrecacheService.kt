@@ -53,8 +53,8 @@ import kotlin.time.Duration.Companion.milliseconds
 private val executor = Executors.newCachedThreadPool()
 private val coroutineScope = CoroutineScope(
     executor.asCoroutineDispatcher() +
-            SupervisorJob() +
-            CoroutineName("PrecacheService-Worker-Scope")
+        SupervisorJob() +
+        CoroutineName("PrecacheService-Worker-Scope")
 )
 
 // While the class is not a singleton (lifecycle), there should only be one download state at a time

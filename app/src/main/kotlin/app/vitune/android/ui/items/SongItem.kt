@@ -26,7 +26,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
-import app.vitune.android.LocalPlayerServiceBinder
 import app.vitune.android.R
 import app.vitune.android.models.Song
 import app.vitune.android.preferences.AppearancePreferences
@@ -35,7 +34,6 @@ import app.vitune.android.utils.medium
 import app.vitune.android.utils.secondary
 import app.vitune.android.utils.semiBold
 import app.vitune.android.utils.thumbnail
-import app.vitune.android.utils.windowState
 import app.vitune.core.ui.LocalAppearance
 import app.vitune.core.ui.shimmer
 import app.vitune.core.ui.utils.px
@@ -53,7 +51,6 @@ fun SongItem(
     isPlaying: Boolean = false,
     hideExplicit: Boolean = AppearancePreferences.hideExplicit
 ) = SongItem(
-    id = song.key,
     modifier = modifier,
     thumbnailUrl = song.thumbnail?.size(thumbnailSize.px),
     title = song.info?.name,
@@ -82,7 +79,6 @@ fun SongItem(
     val extras = remember(song) { song.mediaMetadata.extras?.songBundle }
 
     SongItem(
-        id = song.mediaId,
         modifier = modifier,
         thumbnailUrl = song.mediaMetadata.artworkUri.thumbnail(thumbnailSize.px)?.toString(),
         title = song.mediaMetadata.title?.toString(),
@@ -112,7 +108,6 @@ fun SongItem(
     isPlaying: Boolean = false,
     hideExplicit: Boolean = AppearancePreferences.hideExplicit
 ) = SongItem(
-    id = song.id,
     modifier = modifier,
     index = index,
     thumbnailUrl = song.thumbnailUrl?.thumbnail(thumbnailSize.px),
@@ -131,7 +126,6 @@ fun SongItem(
 
 @Composable
 private fun SongItem(
-    id: String,
     thumbnailUrl: String?,
     title: String?,
     authors: String?,

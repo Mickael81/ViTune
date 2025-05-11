@@ -1,7 +1,6 @@
 package app.vitune.android.ui.components.themed
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width

@@ -196,7 +196,7 @@ fun SyncSettings(
                         text = stringResource(R.string.login),
                         primary = true,
                         enabled = (customInstance?.isNotBlank() == true || selectedInstance != null) &&
-                                username.isNotBlank() && password.isNotBlank(),
+                            username.isNotBlank() && password.isNotBlank(),
                         onClick = {
                             @Suppress("Wrapping") // thank you ktlint
                             (customInstance?.let {

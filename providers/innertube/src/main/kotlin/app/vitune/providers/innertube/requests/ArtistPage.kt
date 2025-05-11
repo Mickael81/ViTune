@@ -53,7 +53,8 @@ suspend fun Innertube.artistPage(body: BrowseBody) = runCatchingCancellable {
 
     val songsSection = findSectionByTitle("Songs")?.musicShelfRenderer
     val albumsSection = findSectionByTitle("Albums")?.musicCarouselShelfRenderer
-    val singlesSection = findSectionByTitle("Singles")?.musicCarouselShelfRenderer
+    val singlesSection = (findSectionByTitle("Singles & EPs") ?: findSectionByTitle("Singles"))
+        ?.musicCarouselShelfRenderer
 
     Innertube.ArtistPage(
         name = response
@@ -67,15 +68,15 @@ suspend fun Innertube.artistPage(body: BrowseBody) = runCatchingCancellable {
             ?.description
             ?.text,
         thumbnail = (
-                response
+            response
+                .header
+                ?.musicImmersiveHeaderRenderer
+                ?.foregroundThumbnail
+                ?: response
                     .header
                     ?.musicImmersiveHeaderRenderer
-                    ?.foregroundThumbnail
-                    ?: response
-                        .header
-                        ?.musicImmersiveHeaderRenderer
-                        ?.thumbnail
-                )
+                    ?.thumbnail
+            )
             ?.musicThumbnailRenderer
             ?.thumbnail
             ?.thumbnails

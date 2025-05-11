@@ -21,7 +21,7 @@
     <string name="all_time">Kõik aeg</string>
 
     <string name="songs">Lood</string>
-    <string name="playlists">Playlist`id</string>
+    <string name="playlists">Esitusloendid</string>
     <string name="albums">Albumid</string>
     <string name="artists">Artistid</string>
     <string name="singles">Singlid</string>
@@ -79,19 +79,19 @@
     <string name="unknown">Tundmatu</string>
     <string name="now_playing">Praegu mängib</string>
 
-    <string name="enter_playlist_name_prompt">Sisesta Playlist`i nimi</string>
-    <string name="new_playlist">Uus Playlist</string>
-    <string name="add_to_playlist">Lisa Playlist`i</string>
+    <string name="enter_playlist_name_prompt">Sisesta esitusloendi nimi</string>
+    <string name="new_playlist">Uus Esitusloend</string>
+    <string name="add_to_playlist">Lisa Esitusloendi</string>
 
     <string name="go_to_album">Mine albumisse</string>
 
     <string name="watch_on_youtube">Vaata YouTube\'is</string>
     <string name="open_in_youtube_music">Ava YouTube Music\'is</string>
-    <string name="watch_playlist_on_youtube">Vaata Playlist`i YouTube\'is</string>
+    <string name="watch_playlist_on_youtube">Vaata Esitusloendi YouTube\'is</string>
     <string name="youtube_music_not_installed">YouTube Music ei ole sinu seadmesse installitud!</string>
 
     <string name="remove_from_queue">Eemalda järjekorrast</string>
-    <string name="remove_from_playlist">Eemalda Playlist`ist</string>
+    <string name="remove_from_playlist">Eemalda Esitusloendist</string>
 
     <string name="hide_from_quick_picks">Peida "Kiirvalikutest"</string>
     <string name="confirm_hide_song">Kas sa tõesti tahad selle loo peita? Selle esitusaeg ja vahemälu kustutatakse.\nSee tegevus on pöördumatu.</string>
@@ -139,7 +139,7 @@
 
     <string name="related_albums">Seotud albumid</string>
     <string name="similar_artists">Sarnased artistid</string>
-    <string name="recommended_playlists">Soovitatud Playlist`id</string>
+    <string name="recommended_playlists">Soovitatud Esitusloendid</string>
     <string name="format_subscribers">%s jälgijat</string>
 
     <string name="enter_lyrics">Sisesta laulusõnad</string>
@@ -164,7 +164,7 @@
     <string name="minimum_speed_value">Miks sa seda teed?!</string>
     <string name="volume_boost">Heli võimendus</string>
     <string name="queue_loop">Järjekorra tsükkel</string>
-    <string name="add_queue_to_playlist">Lisa järjekord Playlist`isse</string>
+    <string name="add_queue_to_playlist">Lisa järjekord Esitusloendisse</string>
 
     <string name="id">ID</string>
     <string name="itag">Itag</string>
@@ -174,7 +174,7 @@
     <string name="loudness">Heli tugevus</string>
 
     <string name="view_album">Vaata albumit</string>
-    <string name="view_playlist">Vaata Playlist`i</string>
+    <string name="view_playlist">Vaata Esitusloendi</string>
 
     <string name="search_placeholder">Sisesta nimi</string>
     <string name="format_version_credits">v%1$s autoriks Huizengek &amp; vfsfitvnm</string>
@@ -212,8 +212,8 @@
 
     <string name="text">Tekst</string>
     <string name="font">Font</string>
-    <string name="use_system_font">Kasuta süsteemi fontte</string>
-    <string name="use_system_font_description">Kasutab süsteemi poolt rakendatud fontte</string>
+    <string name="use_system_font">Kasuta süsteemi fonti</string>
+    <string name="use_system_font_description">Kasutab süsteemi poolt rakendatud fonti</string>
     <string name="apply_font_padding">Kohanda fontti paddingut</string>
     <string name="apply_font_padding_description">Lisa ruumi tekstide ümber</string>
     <string name="language">Keel</string>

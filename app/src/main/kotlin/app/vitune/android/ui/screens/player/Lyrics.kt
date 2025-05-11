@@ -209,13 +209,13 @@ fun Lyrics(
                             val fixed = currentLyrics?.fixed ?: Innertube
                                 .lyrics(NextBody(videoId = mediaId))
                                 ?.getOrNull()
-                            ?: LrcLib.bestLyrics(
-                                artist = artist,
-                                title = title,
-                                duration = duration.milliseconds,
-                                album = album,
-                                synced = false
-                            )?.map { it?.text }?.getOrNull()
+                                ?: LrcLib.bestLyrics(
+                                    artist = artist,
+                                    title = title,
+                                    duration = duration.milliseconds,
+                                    album = album,
+                                    synced = false
+                                )?.map { it?.text }?.getOrNull()
 
                             val synced = currentLyrics?.synced ?: LrcLib.bestLyrics(
                                 artist = artist,
@@ -251,7 +251,7 @@ fun Lyrics(
 
                         error =
                             (shouldShowSynchronizedLyrics && lyrics?.synced?.isBlank() == true) ||
-                                    (!shouldShowSynchronizedLyrics && lyrics?.fixed?.isBlank() == true)
+                            (!shouldShowSynchronizedLyrics && lyrics?.fixed?.isBlank() == true)
                     }
             }
         }.exceptionOrNull()?.let {
@@ -262,7 +262,8 @@ fun Lyrics(
 
     if (editing) TextFieldDialog(
         hintText = stringResource(R.string.enter_lyrics),
-        initialTextInput = (if (shouldShowSynchronizedLyrics) lyrics?.synced else lyrics?.fixed).orEmpty(),
+        initialTextInput = (if (shouldShowSynchronizedLyrics) lyrics?.synced else lyrics?.fixed)
+            .orEmpty(),
         singleLine = false,
         maxLines = 10,
         isTextInputValid = { true },
@@ -330,7 +331,7 @@ fun Lyrics(
             .background(colorPalette.overlay)
     ) {
         val animatedHeight by animateDpAsState(
-            targetValue = maxHeight,
+            targetValue = this.maxHeight, // `this` needed, thanks Android Lint!
             label = ""
         )
 
@@ -390,7 +391,7 @@ fun Lyrics(
                 SynchronizedLyrics(it.toImmutableMap()) {
                     binder?.player?.let { player ->
                         player.currentPosition + UPDATE_DELAY + lyricsState.offset -
-                                (lyrics?.startTime ?: 0L)
+                            (lyrics?.startTime ?: 0L)
                     } ?: 0L
                 }
             }
@@ -554,7 +555,7 @@ fun Lyrics(
                                                         )
                                                     }
                                                 )
-                                            } catch (e: ActivityNotFoundException) {
+                                            } catch (_: ActivityNotFoundException) {
                                                 context.toast(context.getString(R.string.no_browser_installed))
                                             }
                                         }

@@ -193,15 +193,15 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
 
     private val defaultActions =
         PlaybackState.ACTION_PLAY or
-                PlaybackState.ACTION_PAUSE or
-                PlaybackState.ACTION_PLAY_PAUSE or
-                PlaybackState.ACTION_STOP or
-                PlaybackState.ACTION_SKIP_TO_PREVIOUS or
-                PlaybackState.ACTION_SKIP_TO_NEXT or
-                PlaybackState.ACTION_SKIP_TO_QUEUE_ITEM or
-                PlaybackState.ACTION_SEEK_TO or
-                PlaybackState.ACTION_REWIND or
-                PlaybackState.ACTION_PLAY_FROM_SEARCH
+            PlaybackState.ACTION_PAUSE or
+            PlaybackState.ACTION_PLAY_PAUSE or
+            PlaybackState.ACTION_STOP or
+            PlaybackState.ACTION_SKIP_TO_PREVIOUS or
+            PlaybackState.ACTION_SKIP_TO_NEXT or
+            PlaybackState.ACTION_SKIP_TO_QUEUE_ITEM or
+            PlaybackState.ACTION_SEEK_TO or
+            PlaybackState.ACTION_REWIND or
+            PlaybackState.ACTION_PLAY_FROM_SEARCH
 
     private val stateBuilder
         get() = PlaybackState.Builder().setActions(
@@ -762,9 +762,11 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                                     ?: continue
 
                             // Wait for next segment
-                            if (nextSegment.start.inWholeMilliseconds > posMillis()) delay(
-                                ((nextSegment.start.inWholeMilliseconds - posMillis()) / speed().toDouble()).milliseconds
-                            )
+                            if (nextSegment.start.inWholeMilliseconds > posMillis()) {
+                                val timeNextSegment = nextSegment.start.inWholeMilliseconds - posMillis()
+                                val speed = speed().toDouble()
+                                delay((timeNextSegment / speed).milliseconds)
+                            }
 
                             if (posMillis().milliseconds !in nextSegment.start..nextSegment.end) {
                                 // Player is not in the segment for some reason, maybe the user seeked in the meantime
@@ -852,10 +854,10 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         audioDeviceCallback = object : AudioDeviceCallback() {
             private fun canPlayMusic(audioDeviceInfo: AudioDeviceInfo) =
                 audioDeviceInfo.isSink && (
-                        audioDeviceInfo.type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP ||
-                                audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                                audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
-                        )
+                    audioDeviceInfo.type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP ||
+                        audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
+                        audioDeviceInfo.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
+                    )
                     .let {
                         if (!isAtLeastAndroid8) it else
                             it || audioDeviceInfo.type == AudioDeviceInfo.TYPE_USB_HEADSET
@@ -871,8 +873,11 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         audioManager?.registerAudioDeviceCallback(audioDeviceCallback, handler)
     }
 
-    private fun openEqualizer() = EqualizerIntentBundleAccessor.sendOpenEqualizer(player.audioSessionId)
-    private fun closeEqualizer() = EqualizerIntentBundleAccessor.sendCloseEqualizer(player.audioSessionId)
+    private fun openEqualizer() =
+        EqualizerIntentBundleAccessor.sendOpenEqualizer(player.audioSessionId)
+
+    private fun closeEqualizer() =
+        EqualizerIntentBundleAccessor.sendCloseEqualizer(player.audioSessionId)
 
     private fun updatePlaybackState() = coroutineScope.launch {
         playbackStateMutex.withLock {
@@ -1354,11 +1359,13 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             } ?: this
 
             if (
-                dataSpec.isLocal || (chunkLength != null && cache.isCached(
-                    /* key = */ mediaId,
-                    /* position = */ dataSpec.position,
-                    /* length = */ chunkLength
-                ))
+                dataSpec.isLocal || (
+                    chunkLength != null && cache.isCached(
+                        /* key = */ mediaId,
+                        /* position = */ dataSpec.position,
+                        /* length = */ chunkLength
+                    )
+                    )
             ) dataSpec
             else uriCache[mediaId]?.let { cachedUri ->
                 dataSpec
@@ -1459,8 +1466,8 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
                 printStackTrace = true
             ) { ex ->
                 ex.findCause<InvalidResponseCodeException>()?.responseCode == 403 ||
-                        ex.findCause<ClientRequestException>()?.response?.status?.value == 403 ||
-                        ex.findCause<InvalidHttpCodeException>() != null
+                    ex.findCause<ClientRequestException>()?.response?.status?.value == 403 ||
+                    ex.findCause<InvalidHttpCodeException>() != null
             }
             .handleRangeErrors()
             .withFallback(context) { dataSpec ->

@@ -156,11 +156,11 @@ private suspend fun Version.getNewerVersion(
         .sortedByDescending { it.publishedAt }
         .firstOrNull { release ->
             !release.draft &&
-                    !release.preRelease &&
-                    release.tag.version > this &&
-                    release.assets.any {
-                        it.contentType == contentType && it.state == Release.Asset.State.Uploaded
-                    }
+                !release.preRelease &&
+                release.tag.version > this &&
+                release.assets.any {
+                    it.contentType == contentType && it.state == Release.Asset.State.Uploaded
+                }
         }
 }
 

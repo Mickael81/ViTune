@@ -123,9 +123,9 @@ fun HomePlaylists(
                 .only(WindowInsetsSides.Vertical + WindowInsetsSides.End)
                 .asPaddingValues(),
             horizontalArrangement = Arrangement.spacedBy(Dimensions.items.alternativePadding),
-            verticalArrangement =
-                if (UIStatePreferences.playlistsAsGrid) Arrangement.spacedBy(Dimensions.items.alternativePadding)
-                else Arrangement.Top,
+            verticalArrangement = if (UIStatePreferences.playlistsAsGrid)
+                Arrangement.spacedBy(Dimensions.items.alternativePadding)
+            else Arrangement.Top,
             modifier = Modifier
                 .fillMaxSize()
                 .background(colorPalette.background0)

@@ -156,22 +156,16 @@ fun PlaylistSongList(
                 icon = R.drawable.share_social,
                 color = colorPalette.text,
                 onClick = {
-                    (
-                            playlistPage?.url
-                                ?: "https://music.youtube.com/playlist?list=${
-                                    browseId.removePrefix(
-                                        "VL"
-                                    )
-                                }"
-                            ).let { url ->
-                            val sendIntent = Intent().apply {
-                                action = Intent.ACTION_SEND
-                                type = "text/plain"
-                                putExtra(Intent.EXTRA_TEXT, url)
-                            }
+                    val url = playlistPage?.url
+                        ?: "https://music.youtube.com/playlist?list=${browseId.removePrefix("VL")}"
 
-                            context.startActivity(Intent.createChooser(sendIntent, null))
-                        }
+                    val sendIntent = Intent().apply {
+                        action = Intent.ACTION_SEND
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, url)
+                    }
+
+                    context.startActivity(Intent.createChooser(sendIntent, null))
                 }
             )
         }

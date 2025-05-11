@@ -1,10 +1,11 @@
 package app.vitune.core.data.utils
 
-inline val String.version get() = Version(
-    removePrefix("v")
-        .split(".")
-        .mapNotNull { it.toIntOrNull() }
-)
+inline val String.version
+    get() = Version(
+        removePrefix("v")
+            .split(".")
+            .mapNotNull { it.toIntOrNull() }
+    )
 
 @JvmInline
 value class Version(private val parts: List<Int>) {
@@ -14,8 +15,8 @@ value class Version(private val parts: List<Int>) {
 
     companion object {
         private val comparator = compareBy<Version> { it.major } then
-                compareBy { it.minor } then
-                compareBy { it.patch }
+            compareBy { it.minor } then
+            compareBy { it.patch }
     }
 
     operator fun compareTo(other: Version) = comparator.compare(this, other)

@@ -1,17 +1,17 @@
 [versions]
-kotlin = "2.1.0"
-ksp = "2.1.0-1.0.29"
+kotlin = "2.1.20"
+ksp = "2.1.20-2.0.1"
 
-jvm = "17"
-agp = "8.8.0"
+jvm = "23"
+agp = "8.9.2"
 
-room = "2.6.1"
-media3 = "1.5.1"
-ktor = "3.0.3"
-detekt = "1.23.6"
-workmanager = "2.10.0"
-credentials = "1.5.0-rc01"
-coil = "3.0.4"
+room = "2.7.1"
+media3 = "1.6.1"
+ktor = "3.1.2"
+detekt = "1.23.8"
+workmanager = "2.10.1"
+credentials = "1.5.0"
+coil = "3.1.0"
 
 [plugins]
 android_application = { id = "com.android.application", version.ref = "agp" }
@@ -26,21 +26,21 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 [libraries]
-core_ktx = { module = "androidx.core:core-ktx", version = "1.15.0" }
+core_ktx = { module = "androidx.core:core-ktx", version = "1.16.0" }
 
-kotlin_coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.9.0" }
-kotlin_datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.1" }
-kotlin_immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.7" }
+kotlin_coroutines = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version = "1.10.1" }
+kotlin_datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version = "0.6.2" }
+kotlin_immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version = "0.3.8" }
 
-compose_bom = { module = "androidx.compose:compose-bom", version = "2025.01.00" }
+compose_bom = { module = "androidx.compose:compose-bom", version = "2025.04.01" }
 compose_animation = { module = "androidx.compose.animation:animation" }
 compose_foundation = { module = "androidx.compose.foundation:foundation" }
 compose_ui = { module = "androidx.compose.ui:ui" }
 compose_ui_util = { module = "androidx.compose.ui:ui-util" }
 compose_ui_fonts = { module = "androidx.compose.ui:ui-text-google-fonts" }
-compose_material3 = { module = "androidx.compose.material3:material3", version = "1.3.1" }
+compose_material3 = { module = "androidx.compose.material3:material3", version = "1.3.2" }
 
-compose_activity = { module = "androidx.activity:activity-compose", version = "1.10.0" }
+compose_activity = { module = "androidx.activity:activity-compose", version = "1.10.1" }
 compose_shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version = "1.3.0" }
 compose_lottie = { module = "com.airbnb.android:lottie-compose", version = "6.4.1" }
 
@@ -58,7 +58,6 @@ media = { module = "androidx.media:media", version = "1.7.0" }
 workmanager = { module = "androidx.work:work-runtime", version.ref = "workmanager" }
 workmanager_ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "workmanager" }
 
-#noinspection CredentialDependency ==> thank you Android Lint, I added the dependency and this still flags!
 credentials = { module = "androidx.credentials:credentials", version.ref = "credentials" }
 credentials_play = { module = "androidx.credentials:credentials-play-services-auth", version.ref = "credentials" }
 
@@ -82,7 +81,7 @@ brotli = { module = "org.brotli:dec", version = "0.1.2" }
 palette = { module = "androidx.palette:palette", version = "1.0.0" }
 monet = { module = "com.github.KieronQuinn:MonetCompat", version = "0.4.1" }
 
-desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.4" }
+desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.5" }
 
 detekt_compose = { module = "io.nlopez.compose.rules:detekt", version = "0.4.5" }
 detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }

@@ -123,11 +123,11 @@ fun Thumbnail(
 
             ContentTransform(
                 targetContentEnter = slideIntoContainer(direction, tween(duration)) +
-                        fadeIn(tween(duration)) +
-                        scaleIn(tween(duration), 0.85f),
+                    fadeIn(tween(duration)) +
+                    scaleIn(tween(duration), 0.85f),
                 initialContentExit = slideOutOfContainer(direction, tween(duration)) +
-                        fadeOut(tween(duration)) +
-                        scaleOut(tween(duration), 0.85f),
+                    fadeOut(tween(duration)) +
+                    scaleOut(tween(duration), 0.85f),
                 sizeTransform = sizeTransform
             )
         },

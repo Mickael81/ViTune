@@ -131,7 +131,10 @@ object KuGou {
         val startIndex = indexOf(startDelimiter).takeIf { it != -1 } ?: return this to ""
         val endIndex = indexOf(endDelimiter, startIndex).takeIf { it != -1 } ?: return this to ""
 
-        return removeRange(startIndex, endIndex + 1) to substring(startIndex + startDelimiter.length, endIndex)
+        return removeRange(
+            startIndex,
+            endIndex + 1
+        ) to substring(startIndex + startDelimiter.length, endIndex)
     }
 
     @JvmInline
@@ -145,21 +148,21 @@ object KuGou {
 
             for (line in text.lineSequence()) when {
                 line.startsWith("[ti:") ||
-                        line.startsWith("[ar:") ||
-                        line.startsWith("[al:") ||
-                        line.startsWith("[by:") ||
-                        line.startsWith("[hash:") ||
-                        line.startsWith("[sign:") ||
-                        line.startsWith("[qq:") ||
-                        line.startsWith("[total:") ||
-                        line.startsWith("[offset:") ||
-                        line.startsWith("[id:") ||
-                        line.containsAt("]Written by：", 9) ||
-                        line.containsAt("]Lyrics by：", 9) ||
-                        line.containsAt("]Composed by：", 9) ||
-                        line.containsAt("]Producer：", 9) ||
-                        line.containsAt("]作曲 : ", 9) ||
-                        line.containsAt("]作词 : ", 9) -> {
+                    line.startsWith("[ar:") ||
+                    line.startsWith("[al:") ||
+                    line.startsWith("[by:") ||
+                    line.startsWith("[hash:") ||
+                    line.startsWith("[sign:") ||
+                    line.startsWith("[qq:") ||
+                    line.startsWith("[total:") ||
+                    line.startsWith("[offset:") ||
+                    line.startsWith("[id:") ||
+                    line.containsAt("]Written by：", 9) ||
+                    line.containsAt("]Lyrics by：", 9) ||
+                    line.containsAt("]Composed by：", 9) ||
+                    line.containsAt("]Producer：", 9) ||
+                    line.containsAt("]作曲 : ", 9) ||
+                    line.containsAt("]作词 : ", 9) -> {
                     toDrop += line.length + 1 + maybeToDrop
                     maybeToDrop = 0
                 }

@@ -187,9 +187,9 @@ fun PlaylistItem(
     thumbnailSize = thumbnailSize,
     modifier = Modifier.clip(
         (
-                LocalAppearance.current.thumbnailShapeCorners +
-                        if (alternative) Dimensions.items.alternativePadding else Dimensions.items.horizontalPadding
-                ).roundedShape
+            LocalAppearance.current.thumbnailShapeCorners +
+                if (alternative) Dimensions.items.alternativePadding else Dimensions.items.horizontalPadding
+            ).roundedShape
     ) then modifier
 ) { centeredModifier ->
     val (colorPalette, typography, thumbnailShapeCorners) = LocalAppearance.current

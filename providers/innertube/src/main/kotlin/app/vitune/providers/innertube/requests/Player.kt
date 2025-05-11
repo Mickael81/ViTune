@@ -59,7 +59,7 @@ private suspend fun Innertube.tryContexts(
 
 private val PlayerResponse.isValid
     get() = playabilityStatus?.status == "OK" &&
-            streamingData?.adaptiveFormats?.any { it.url != null || it.signatureCipher != null } == true
+        streamingData?.adaptiveFormats?.any { it.url != null || it.signatureCipher != null } == true
 
 suspend fun Innertube.player(body: PlayerBody): Result<PlayerResponse?>? = runCatchingCancellable {
     tryContexts(

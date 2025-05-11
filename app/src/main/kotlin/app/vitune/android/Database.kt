@@ -356,7 +356,7 @@ interface Database {
     @Transaction
     @Query(
         """
-        SELECT id, name, (SELECT COUNT(*) FROM SongPlaylistMap WHERE playlistId = id) as songCount, thumbnail FROM Playlist 
+        SELECT id, name, (SELECT COUNT(*) FROM SongPlaylistMap WHERE playlistId = id) as songCount, thumbnail FROM Playlist
         ORDER BY name COLLATE NOCASE ASC
         """
     )
@@ -565,12 +565,12 @@ interface Database {
     @Transaction
     @Query(
         """
-        UPDATE SongPlaylistMap SET position = 
-          CASE 
+        UPDATE SongPlaylistMap SET position =
+          CASE
             WHEN position < :fromPosition THEN position + 1
             WHEN position > :fromPosition THEN position - 1
             ELSE :toPosition
-          END 
+          END
         WHERE playlistId = :playlistId AND position BETWEEN MIN(:fromPosition,:toPosition) and MAX(:fromPosition,:toPosition)
         """
     )
@@ -595,7 +595,7 @@ interface Database {
     fun search(query: String): Flow<List<Song>>
 
     @Query("SELECT albumId AS id, NULL AS name FROM SongAlbumMap WHERE songId = :songId")
-    suspend fun songAlbumInfo(songId: String): Info
+    suspend fun songAlbumInfo(songId: String): Info?
 
     @Query("SELECT id, name FROM Artist LEFT JOIN SongArtistMap ON id = artistId WHERE songId = :songId")
     suspend fun songArtistInfo(songId: String): List<Info>

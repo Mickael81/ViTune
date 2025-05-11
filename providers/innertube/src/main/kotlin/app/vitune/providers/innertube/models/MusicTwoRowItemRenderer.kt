@@ -17,8 +17,8 @@ data class MusicTwoRowItemRenderer(
     val isAlbum: Boolean
         get() = navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs
             ?.browseEndpointContextMusicConfig?.pageType == "MUSIC_PAGE_TYPE_ALBUM" ||
-                navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs
-                    ?.browseEndpointContextMusicConfig?.pageType == "MUSIC_PAGE_TYPE_AUDIOBOOK"
+            navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs
+                ?.browseEndpointContextMusicConfig?.pageType == "MUSIC_PAGE_TYPE_AUDIOBOOK"
 
     val isArtist: Boolean
         get() = navigationEndpoint?.browseEndpoint?.browseEndpointContextSupportedConfigs

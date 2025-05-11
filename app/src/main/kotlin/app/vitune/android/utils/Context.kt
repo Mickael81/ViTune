@@ -8,13 +8,14 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.PowerManager
 import android.widget.Toast
 import androidx.annotation.OptIn
+import androidx.annotation.StringRes
 import androidx.core.app.PendingIntentCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.getSystemService
+import androidx.core.net.toUri
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.offline.DownloadRequest
 import androidx.media3.exoplayer.offline.DownloadService
@@ -44,21 +45,26 @@ fun Context.pendingIntent(
     intent: Intent,
     requestCode: Int = 0,
     @PendingIntentCompat.Flags flags: Int = 0
-): PendingIntent = PendingIntent.getActivity(
-    /* context = */ this,
-    /* requestCode = */ requestCode,
-    /* intent = */ intent,
-    /* flags = */ (if (isAtLeastAndroid6) PendingIntent.FLAG_IMMUTABLE else 0) or flags
-)
+): PendingIntent {
+    val flags = (if (isAtLeastAndroid6) PendingIntent.FLAG_IMMUTABLE else 0) or flags
+    return PendingIntent.getActivity(this, requestCode, intent, flags)
+}
 
 val Context.isIgnoringBatteryOptimizations
     get() = !isAtLeastAndroid6 ||
-            getSystemService<PowerManager>()?.isIgnoringBatteryOptimizations(packageName) ?: true
+        getSystemService<PowerManager>()?.isIgnoringBatteryOptimizations(packageName) ?: true
 
 fun Context.toast(
-    message: String,
+    @StringRes
+    message: Int,
     duration: ToastDuration = ToastDuration.Short
-) = Toast.makeText(this, message, duration.length).show()
+) = toast(
+    message = getString(message),
+    duration = duration
+)
+
+fun Context.toast(message: String, duration: ToastDuration = ToastDuration.Short) =
+    Toast.makeText(this, message, duration.length).show()
 
 @JvmInline
 value class ToastDuration private constructor(internal val length: Int) {
@@ -76,7 +82,7 @@ fun launchYouTubeMusic(
     return try {
         val intent = Intent(
             Intent.ACTION_VIEW,
-            Uri.parse("https://music.youtube.com/${endpoint.dropWhile { it == '/' }}")
+            "https://music.youtube.com/${endpoint.dropWhile { it == '/' }}".toUri()
         ).apply {
             if (tryWithoutBrowser && isAtLeastAndroid11) {
                 flags = Intent.FLAG_ACTIVITY_REQUIRE_NON_BROWSER
@@ -86,12 +92,12 @@ fun launchYouTubeMusic(
             context.applicationContext.packageManager.queryIntentActivities(intent, 0)
                 .firstOrNull {
                     it?.activityInfo?.packageName != null &&
-                            BuildConfig.APPLICATION_ID !in it.activityInfo.packageName
+                        BuildConfig.APPLICATION_ID !in it.activityInfo.packageName
                 }?.activityInfo?.packageName
                 ?: return false
         context.startActivity(intent)
         true
-    } catch (e: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
         if (tryWithoutBrowser) launchYouTubeMusic(
             context = context,
             endpoint = endpoint,
@@ -116,17 +122,7 @@ fun Context.hasPermission(permission: String) = ContextCompat.checkSelfPermissio
 
 @OptIn(UnstableApi::class)
 inline fun <reified T : DownloadService> Context.download(request: DownloadRequest) = runCatching {
-    sendAddDownload(
-        /* context         = */ this,
-        /* clazz           = */ T::class.java,
-        /* downloadRequest = */ request,
-        /* foreground      = */ true
-    )
+    sendAddDownload(this, T::class.java, request, true)
 }.recoverCatching {
-    sendAddDownload(
-        /* context         = */ this,
-        /* clazz           = */ T::class.java,
-        /* downloadRequest = */ request,
-        /* foreground      = */ false
-    )
+    sendAddDownload(this, T::class.java, request, false)
 }

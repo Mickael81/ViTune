@@ -25,9 +25,9 @@ fun CircularProgressIndicator(
         strokeCap = strokeCap ?: ProgressIndicatorDefaults.CircularIndeterminateStrokeCap
     ) else {
         val animatedProgress by (
-                if (animateProgress) animateFloatAsState(targetValue = progress)
-                else remember { derivedStateOf { progress } }
-                )
+            if (animateProgress) animateFloatAsState(targetValue = progress)
+            else remember { derivedStateOf { progress } }
+            )
 
         androidx.compose.material3.CircularProgressIndicator(
             modifier = modifier,
@@ -54,9 +54,9 @@ fun LinearProgressIndicator(
         strokeCap = strokeCap
     ) else {
         val animatedProgress by (
-                if (animateProgress) animateFloatAsState(targetValue = progress)
-                else remember { derivedStateOf { progress } }
-                )
+            if (animateProgress) animateFloatAsState(targetValue = progress)
+            else remember { derivedStateOf { progress } }
+            )
 
         androidx.compose.material3.LinearProgressIndicator(
             modifier = modifier,

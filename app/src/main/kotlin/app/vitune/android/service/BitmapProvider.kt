@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.net.Uri
 import androidx.core.graphics.applyCanvas
+import androidx.core.graphics.createBitmap
 import app.vitune.android.utils.thumbnail
 import coil3.imageLoader
 import coil3.request.Disposable
@@ -42,7 +43,7 @@ class BitmapProvider(
 
     fun setDefaultBitmap(): Boolean {
         val isSystemInDarkMode = resources.configuration.uiMode and
-                Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
+            Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES
 
         var oldBitmap: Bitmap? = null
         if (::defaultBitmap.isInitialized) {
@@ -53,11 +54,7 @@ class BitmapProvider(
         lastIsSystemInDarkMode = isSystemInDarkMode
 
         val size = getBitmapSize()
-        defaultBitmap = Bitmap.createBitmap(
-            /* width = */ size,
-            /* height = */ size,
-            /* config = */ Bitmap.Config.ARGB_8888
-        ).applyCanvas {
+        defaultBitmap = createBitmap(size, size).applyCanvas {
             drawColor(getColor(isSystemInDarkMode))
         }
         oldBitmap?.recycle()

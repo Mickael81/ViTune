@@ -65,6 +65,9 @@ complexity:
     ignoreDataClasses: true
   LongMethod:
     active: false
+  NestedBlockDepth:
+    active: true
+    threshold: 6
   TooManyFunctions:
     excludes:
       - '**/util/**'
@@ -77,16 +80,12 @@ exceptions:
 
 formatting:
   AnnotationOnSeparateLine:
-    active: true
-    ignoreAnnotated:
-      - kotlinx.serialization.Serializable
+    active: false
   CommentWrapping:
     # Because argument names in comment are a thing: Java API's do not support named arguments
     active: false
   EnumEntryNameCase:
     active: false # Handled by Android Lint
-  Indentation:
-    active: false # Idea/Android Studio handles indentation differently
   MultiLineIfElse:
     active: false
   TrailingCommaOnCallSite:

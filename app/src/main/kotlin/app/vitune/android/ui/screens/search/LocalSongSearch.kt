@@ -129,7 +129,8 @@ fun LocalSongSearch(
                         .animateItem(),
                     song = song,
                     thumbnailSize = Dimensions.thumbnails.song,
-                    isPlaying = playing && currentMediaId == song.id // TODO: refactor out a simple 'song list' in order to fix this kind of repetition
+                    // TODO: refactor out a simple 'song list' in order to fix this kind of repetition
+                    isPlaying = playing && currentMediaId == song.id
                 )
             }
         }

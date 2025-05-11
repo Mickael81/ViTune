@@ -19,7 +19,7 @@ val clean by tasks.registering(Delete::class) {
 
 allprojects {
     group = "app.vitune"
-    version = "1.1.3"
+    version = "1.1.4"
 
     apply(plugin = "io.gitlab.arturbosch.detekt")
 
@@ -30,7 +30,7 @@ allprojects {
     }
 
     tasks.withType<Detekt>().configureEach {
-        jvmTarget = "17"
+        jvmTarget = "22"
         reports {
             html.required = true
         }

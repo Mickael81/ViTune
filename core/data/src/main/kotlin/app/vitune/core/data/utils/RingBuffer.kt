@@ -34,9 +34,7 @@ class UriCache<Key : Any, Meta>(size: Int = 16) {
     )
 
     operator fun get(key: Key) = buffer.find {
-        it != null &&
-                it.key == key &&
-                (it.validUntil == null || it.validUntil > Clock.System.now())
+        it != null && it.key == key && (it.validUntil == null || it.validUntil > Clock.System.now())
     }
 
     fun push(

@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace = "app.vitune.core.data"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         minSdk = 21
@@ -18,6 +18,15 @@ android {
 
 kotlin {
     jvmToolchain(libs.versions.jvm.get().toInt())
+
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xcontext-receivers",
+            "-Xnon-local-break-continue",
+            "-Xconsistent-data-class-copy-visibility",
+            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
+        )
+    }
 }
 
 dependencies {
