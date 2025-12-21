@@ -156,9 +156,9 @@ sealed class Tab : Parcelable {
 
     data class ResourcesTab(
         override val key: String,
-        @StringRes
+        @param:StringRes
         private val titleRes: Int,
-        @DrawableRes
+        @param:DrawableRes
         override val icon: Int,
         override val canHide: Boolean
     ) : Tab() {
@@ -169,7 +169,7 @@ sealed class Tab : Parcelable {
     data class StaticTab(
         override val key: String,
         private val titleText: String,
-        @DrawableRes
+        @param:DrawableRes
         override val icon: Int,
         override val canHide: Boolean
     ) : Tab() {

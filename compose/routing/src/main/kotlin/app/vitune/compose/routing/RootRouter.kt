@@ -11,7 +11,9 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.compositionLocalOf
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.movableContentOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -117,15 +119,15 @@ value class RootRouterOwner internal constructor(val router: RootRouter)
 val LocalRouteHandler = compositionLocalOf<RootRouter?> { null }
 
 @Composable
-fun ProvideRootRouter(content: @Composable RootRouterOwner.() -> Unit) =
-    LocalRouteHandler.current.let { current ->
-        if (current == null) {
-            val newHandler = RootRouter()
-            CompositionLocalProvider(LocalRouteHandler provides newHandler) {
-                content(RootRouterOwner(newHandler))
-            }
-        } else content(RootRouterOwner(current))
+fun ProvideRootRouter(content: @Composable RootRouterOwner.() -> Unit) {
+    val currentRouteHandler = LocalRouteHandler.current
+    val content = remember { movableContentOf(content) }
+    val handler by remember { derivedStateOf { currentRouteHandler ?: RootRouter() } }
+
+    CompositionLocalProvider(LocalRouteHandler provides handler) {
+        content(RootRouterOwner(handler))
     }
+}
 
 @Composable
 private fun RouteHandler(

@@ -1,5 +1,16 @@
 -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
 
+-keepclassmembers class app.vitune.android.utils.ActionReceiver$* {
+    <fields>;
+    <methods>;
+}
+
+-if @app.vitune.android.utils.ActionReceiver class **
+-keepclassmembers class <1> {
+    <fields>;
+    <methods>;
+}
+
 #noinspection ShrinkerUnresolvedReference
 -if @kotlinx.serialization.Serializable class **
 -keepclassmembers class <1> {
@@ -41,8 +52,4 @@
 -dontwarn org.openjsse.net.ssl.OpenJSSE
 -dontwarn org.slf4j.impl.StaticLoggerBinder
 
-# Rhino
--keep class org.mozilla.javascript.** { *; }
--keep class org.mozilla.classfile.ClassFileWriter
--dontwarn org.mozilla.javascript.JavaToJSONConverters
--dontwarn org.mozilla.javascript.tools.**
+-keep class ch.qos.logback.classic.android.** { *; }

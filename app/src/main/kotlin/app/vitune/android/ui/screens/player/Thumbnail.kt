@@ -38,6 +38,7 @@ import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -59,6 +60,7 @@ import app.vitune.android.service.isLocal
 import app.vitune.android.ui.modifiers.onSwipe
 import app.vitune.android.utils.forceSeekToNext
 import app.vitune.android.utils.forceSeekToPrevious
+import app.vitune.android.utils.isInPip
 import app.vitune.android.utils.thumbnail
 import app.vitune.android.utils.windowState
 import app.vitune.core.ui.Dimensions
@@ -101,6 +103,7 @@ fun Thumbnail(
             spring(dampingRatio = Spring.DampingRatioLowBouncy)
         }
     ) { if (it) 1f else 0f }
+    val isInPip = isInPip()
 
     AnimatedContent(
         targetState = window,
@@ -159,7 +162,7 @@ fun Thumbnail(
         if (currentWindow != null) Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(thumbnailShape)
+                .clip(if (isInPip) RectangleShape else thumbnailShape)
                 .shadow(
                     elevation = shadowElevation,
                     shape = thumbnailShape,

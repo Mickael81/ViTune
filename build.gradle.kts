@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.android.lint) apply false
     alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.chaquo) apply false
     alias(libs.plugins.detekt)
 }
 
@@ -19,7 +20,7 @@ val clean by tasks.registering(Delete::class) {
 
 allprojects {
     group = "app.vitune"
-    version = "1.1.5"
+    version = "1.1.7"
 
     apply(plugin = "io.gitlab.arturbosch.detekt")
 

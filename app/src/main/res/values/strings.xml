@@ -365,6 +365,10 @@
     <string name="reverb_large_hall">Large hall</string>
     <string name="reverb_plate">Plate</string>
     <string name="tabs">Tabs</string>
+    <string name="please_wait">Please wait, this may take some time</string>
+    <string name="yt_dlp_success">Upgrading yt-dlp succeeded</string>
+    <string name="yt_dlp_fail">Upgrading yt-dlp failed</string>
+    <string name="upgrade_yt_dlp">Upgrade yt-dlp</string>
     <plurals name="format_reset_blacklist_description">
         <item quantity="one">Remove %1$s song from the blacklist</item>
         <item quantity="other">Remove all %1$s songs from the blacklist</item>

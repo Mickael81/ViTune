@@ -1,7 +1,8 @@
+@file:OptIn(ExperimentalTime::class)
+
 package app.vitune.providers.piped.models
 
 import io.ktor.http.Url
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
@@ -13,6 +14,8 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 import java.util.UUID
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 object UrlSerializer : KSerializer<Url> {
     override val descriptor = PrimitiveSerialDescriptor("Url", PrimitiveKind.STRING)

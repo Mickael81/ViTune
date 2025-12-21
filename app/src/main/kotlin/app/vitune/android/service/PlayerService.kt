@@ -2,7 +2,6 @@ package app.vitune.android.service
 
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
-import android.content.ContentUris
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
@@ -19,8 +18,8 @@ import android.media.audiofx.PresetReverb
 import android.media.session.MediaSession
 import android.media.session.PlaybackState
 import android.os.Bundle
+import android.os.ResultReceiver
 import android.os.SystemClock
-import android.provider.MediaStore
 import android.support.v4.media.session.MediaSessionCompat
 import android.text.format.DateUtils
 import androidx.annotation.OptIn
@@ -29,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.startForegroundService
 import androidx.core.content.getSystemService
 import androidx.core.net.toUri
@@ -56,6 +56,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.analytics.PlaybackStats
 import androidx.media3.exoplayer.analytics.PlaybackStatsListener
+import androidx.media3.exoplayer.audio.AudioOutputProvider
 import androidx.media3.exoplayer.audio.AudioSink
 import androidx.media3.exoplayer.audio.DefaultAudioOffloadSupportProvider
 import androidx.media3.exoplayer.audio.DefaultAudioSink
@@ -65,6 +66,7 @@ import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import androidx.media3.exoplayer.upstream.DefaultLoadErrorHandlingPolicy
 import androidx.media3.extractor.DefaultExtractorsFactory
 import app.vitune.android.Database
+import app.vitune.android.Dependencies
 import app.vitune.android.MainActivity
 import app.vitune.android.R
 import app.vitune.android.models.Event
@@ -82,6 +84,7 @@ import app.vitune.android.utils.ConditionalCacheDataSourceFactory
 import app.vitune.android.utils.GlyphInterface
 import app.vitune.android.utils.InvincibleService
 import app.vitune.android.utils.TimerJob
+import app.vitune.android.utils.YouTubeDLResponse
 import app.vitune.android.utils.YouTubeRadio
 import app.vitune.android.utils.activityPendingIntent
 import app.vitune.android.utils.asDataSource
@@ -93,19 +96,16 @@ import app.vitune.android.utils.forcePlayFromBeginning
 import app.vitune.android.utils.forceSeekToNext
 import app.vitune.android.utils.forceSeekToPrevious
 import app.vitune.android.utils.get
-import app.vitune.android.utils.handleRangeErrors
 import app.vitune.android.utils.handleUnknownErrors
 import app.vitune.android.utils.intent
 import app.vitune.android.utils.mediaItems
 import app.vitune.android.utils.progress
 import app.vitune.android.utils.readOnlyWhen
-import app.vitune.android.utils.retryIf
 import app.vitune.android.utils.setPlaybackPitch
 import app.vitune.android.utils.shouldBePlaying
 import app.vitune.android.utils.thumbnail
 import app.vitune.android.utils.timer
 import app.vitune.android.utils.toast
-import app.vitune.android.utils.withFallback
 import app.vitune.compose.preferences.SharedPreferencesProperty
 import app.vitune.core.data.enums.ExoPlayerDiskCacheSize
 import app.vitune.core.data.utils.UriCache
@@ -119,7 +119,6 @@ import app.vitune.core.ui.utils.isAtLeastAndroid9
 import app.vitune.core.ui.utils.songBundle
 import app.vitune.core.ui.utils.streamVolumeFlow
 import app.vitune.providers.innertube.Innertube
-import app.vitune.providers.innertube.InvalidHttpCodeException
 import app.vitune.providers.innertube.models.NavigationEndpoint
 import app.vitune.providers.innertube.models.bodies.PlayerBody
 import app.vitune.providers.innertube.models.bodies.SearchBody
@@ -130,7 +129,6 @@ import app.vitune.providers.sponsorblock.SponsorBlock
 import app.vitune.providers.sponsorblock.models.Action
 import app.vitune.providers.sponsorblock.models.Category
 import app.vitune.providers.sponsorblock.requests.segments
-import io.ktor.client.plugins.ClientRequestException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -148,7 +146,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
@@ -164,11 +161,9 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.yield
-import kotlinx.datetime.Clock
 import java.io.IOException
 import kotlin.math.roundToInt
 import kotlin.time.Duration.Companion.milliseconds
-import kotlin.time.Duration.Companion.seconds
 import android.os.Binder as AndroidBinder
 
 const val LOCAL_KEY_PREFIX = "local:"
@@ -180,8 +175,8 @@ val DataSpec.isLocal get() = key?.startsWith(LOCAL_KEY_PREFIX) == true
 val MediaItem.isLocal get() = mediaId.startsWith(LOCAL_KEY_PREFIX)
 val Song.isLocal get() = id.startsWith(LOCAL_KEY_PREFIX)
 
-private const val LIKE_ACTION = "LIKE"
-private const val LOOP_ACTION = "LOOP"
+private const val LIKE_ACTION = "app.vitune.android.LIKE"
+private const val LOOP_ACTION = "app.vitune.android.LOOP"
 
 @kotlin.OptIn(ExperimentalCoroutinesApi::class)
 @Suppress("LargeClass", "TooManyFunctions") // intended in this class: it is a service
@@ -286,7 +281,7 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
         super.onCreate()
 
         glyphInterface.tryInit()
-        notificationActionReceiver.register()
+        notificationActionReceiver.register(flags = ContextCompat.RECEIVER_EXPORTED)
 
         bitmapProvider = BitmapProvider(
             getBitmapSize = {
@@ -296,7 +291,8 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             },
             getColor = { isSystemInDarkMode ->
                 if (isSystemInDarkMode) Color.BLACK else Color.WHITE
-            }
+            },
+            context = this
         )
 
         cache = createCache(this)
@@ -763,7 +759,8 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
 
                             // Wait for next segment
                             if (nextSegment.start.inWholeMilliseconds > posMillis()) {
-                                val timeNextSegment = nextSegment.start.inWholeMilliseconds - posMillis()
+                                val timeNextSegment =
+                                    nextSegment.start.inWholeMilliseconds - posMillis()
                                 val speed = speed().toDouble()
                                 delay((timeNextSegment / speed).milliseconds)
                             }
@@ -1074,9 +1071,10 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             val minimumSilenceDuration =
                 PlayerPreferences.minimumSilence.coerceIn(1000L..2_000_000L)
 
+            @Suppress("DEPRECATION")
             return DefaultAudioSink.Builder(applicationContext)
                 .setEnableFloatOutput(enableFloatOutput)
-                .setEnableAudioTrackPlaybackParams(enableAudioTrackPlaybackParams)
+                .setEnableAudioOutputPlaybackParameters(enableAudioTrackPlaybackParams)
                 .setAudioOffloadSupportProvider(
                     DefaultAudioOffloadSupportProvider(applicationContext)
                 )
@@ -1303,8 +1301,9 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
     }
 
     class NotificationDismissReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            context.stopService(context.intent<PlayerService>())
+        override fun onReceive(context: Context, intent: Intent) = with(context) {
+            stopService(intent<PlayerService>())
+            Unit
         }
     }
 
@@ -1374,120 +1373,66 @@ class PlayerService : InvincibleService(), Player.Listener, PlaybackStatsListene
             } ?: run {
                 val body = runBlocking(Dispatchers.IO) {
                     Innertube.player(PlayerBody(videoId = mediaId))
-                }?.getOrThrow()
+                }?.getOrNull()
+                val youtubeFormat = body?.streamingData?.highestQualityFormat
 
-                if (body?.videoDetails?.videoId != mediaId) throw VideoIdMismatchException()
+                val info = runCatching {
+                    Dependencies.runDownload(mediaId)
+                }.mapCatching {
+                    YouTubeDLResponse.fromString(it)
+                }.also { it.exceptionOrNull()?.printStackTrace() }.getOrNull()
+                if (info?.id != mediaId) throw VideoIdMismatchException()
+                val format = info.formats?.firstOrNull { it.formatId == info.formatId }
 
-                body.reason?.let { Log.w(TAG, it) }
-                val format = body.streamingData?.highestQualityFormat
-                    ?: throw PlayableFormatNotFoundException()
-                val url = when (val status = body.playabilityStatus?.status) {
-                    "OK" -> {
-                        val mediaItem = runCatching {
-                            runBlocking(Dispatchers.IO) { findMediaItem(mediaId) }
-                        }.getOrNull()
-                        val extras = mediaItem?.mediaMetadata?.extras?.songBundle
+                val uri =
+                    runCatching { info.url?.toUri() }.getOrNull() ?: throw UnplayableException()
 
-                        if (extras?.durationText == null) format.approxDurationMs
-                            ?.div(1000)
-                            ?.let(DateUtils::formatElapsedTime)
-                            ?.removePrefix("0")
-                            ?.let { durationText ->
-                                extras?.durationText = durationText
-                                Database.updateDurationText(mediaId, durationText)
-                            }
+                val mediaItem = runCatching {
+                    runBlocking(Dispatchers.IO) { findMediaItem(mediaId) }
+                }.getOrNull()
 
-                        transaction {
-                            runCatching {
-                                mediaItem?.let(Database::insert)
-
-                                Database.insert(
-                                    Format(
-                                        songId = mediaId,
-                                        itag = format.itag,
-                                        mimeType = format.mimeType,
-                                        bitrate = format.bitrate,
-                                        loudnessDb = body.playerConfig?.audioConfig?.normalizedLoudnessDb,
-                                        contentLength = format.contentLength,
-                                        lastModified = format.lastModified
-                                    )
-                                )
-                            }
-                        }
-
-                        runCatching {
-                            runBlocking(Dispatchers.IO) {
-                                body.context?.let { format.findUrl(it) }
-                            }
-                        }.getOrElse {
-                            throw RestrictedVideoException(it)
-                        }
+                val extras = mediaItem?.mediaMetadata?.extras?.songBundle
+                if (extras?.durationText == null) body
+                    ?.streamingData
+                    ?.highestQualityFormat
+                    ?.approxDurationMs
+                    ?.div(1000)
+                    ?.let(DateUtils::formatElapsedTime)
+                    ?.removePrefix("0")
+                    ?.let { durationText ->
+                        extras?.durationText = durationText
+                        Database.updateDurationText(mediaId, durationText)
                     }
 
-                    "UNPLAYABLE" -> throw UnplayableException()
-                    "LOGIN_REQUIRED" -> throw LoginRequiredException()
-
-                    else -> throw PlaybackException(
-                        /* message = */ status,
-                        /* cause = */ null,
-                        /* errorCode = */ PlaybackException.ERROR_CODE_REMOTE_ERROR
-                    )
-                } ?: throw UnplayableException()
-
-                val uri = url.toUri().let {
-                    if (body.cpn == null) it
-                    else it
-                        .buildUpon()
-                        .appendQueryParameter("cpn", body.cpn)
-                        .build()
+                transaction {
+                    runCatching {
+                        mediaItem?.let(Database::insert)
+                        Database.insert(
+                            Format(
+                                songId = mediaId,
+                                itag = info.formatId?.toIntOrNull(),
+                                mimeType = youtubeFormat?.mimeType,
+                                bitrate = format?.abr?.let { it * 1000 }?.toLong(),
+                                loudnessDb = body?.playerConfig?.audioConfig?.normalizedLoudnessDb,
+                                contentLength = info.fileSize,
+                                lastModified = youtubeFormat?.lastModified
+                            )
+                        )
+                    }
                 }
 
                 uriCache.push(
                     key = mediaId,
-                    meta = format.contentLength,
-                    uri = uri,
-                    validUntil = body.streamingData?.expiresInSeconds?.seconds?.let { Clock.System.now() + it }
+                    meta = info.fileSize,
+                    uri = uri
                 )
 
                 dataSpec
                     .withUri(uri)
-                    .ranged(format.contentLength)
+                    .ranged(info.fileSize)
             }
+        }.handleUnknownErrors {
+            uriCache.clear()
         }
-            .handleUnknownErrors {
-                uriCache.clear()
-            }
-            .retryIf<UnplayableException>(
-                maxRetries = 3,
-                printStackTrace = true
-            )
-            .retryIf(
-                maxRetries = 1,
-                printStackTrace = true
-            ) { ex ->
-                ex.findCause<InvalidResponseCodeException>()?.responseCode == 403 ||
-                    ex.findCause<ClientRequestException>()?.response?.status?.value == 403 ||
-                    ex.findCause<InvalidHttpCodeException>() != null
-            }
-            .handleRangeErrors()
-            .withFallback(context) { dataSpec ->
-                val id = dataSpec.key ?: error("No id found for resolving an alternative song")
-                val alternativeSong = runBlocking {
-                    Database
-                        .localSongsByRowIdDesc()
-                        .first()
-                        .find { id in it.title }
-                } ?: error("No alternative song found")
-
-                dataSpec.buildUpon()
-                    .setKey(alternativeSong.id)
-                    .setUri(
-                        ContentUris.withAppendedId(
-                            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                            alternativeSong.id.substringAfter(LOCAL_KEY_PREFIX).toLong()
-                        )
-                    )
-                    .build()
-            }
     }
 }

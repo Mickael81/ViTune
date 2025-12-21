@@ -33,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.OnPictureInPictureModeChangedProvider
 import androidx.core.app.PictureInPictureModeChangedInfo
 import androidx.core.graphics.toRect
+import androidx.core.util.Consumer
 import app.vitune.android.R
 import app.vitune.android.preferences.AppearancePreferences
 import app.vitune.compose.persist.findActivityNullable
@@ -126,7 +127,8 @@ fun isInPip(
     DisposableEffect(activity, currentOnChange) {
         if (activity !is OnPictureInPictureModeChangedProvider) return@DisposableEffect onDispose { }
 
-        val listener: (PictureInPictureModeChangedInfo) -> Unit = {
+        pip = activity.pip // also update after resuming
+        val listener = Consumer<PictureInPictureModeChangedInfo> {
             pip = it.isInPictureInPictureMode
             currentOnChange(pip)
         }
@@ -177,7 +179,7 @@ fun Pip(
 
     DisposableEffect(context, actions) {
         val currentActions = actions ?: return@DisposableEffect onDispose { }
-        currentActions.register(context)
+        with(context) { currentActions.register() }
         onDispose {
             context.unregisterReceiver(currentActions)
             activity.setAutoEnterPip(false)

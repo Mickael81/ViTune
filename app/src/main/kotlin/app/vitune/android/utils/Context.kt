@@ -24,7 +24,8 @@ import app.vitune.android.BuildConfig
 import app.vitune.core.ui.utils.isAtLeastAndroid11
 import app.vitune.core.ui.utils.isAtLeastAndroid6
 
-inline fun <reified T> Context.intent(): Intent = Intent(this@Context, T::class.java)
+context(context: Context)
+inline fun <reified T> intent(): Intent = Intent(context, T::class.java)
 
 inline fun <reified T : BroadcastReceiver> Context.broadcastPendingIntent(
     requestCode: Int = 0,

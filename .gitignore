@@ -1,3 +1,4 @@
+/.sdk
 *.iml
 .gradle
 /local.properties
@@ -11,3 +12,6 @@ build
 local.properties
 
 .kotlin
+
+.quickjs_cache/
+jniLibs/

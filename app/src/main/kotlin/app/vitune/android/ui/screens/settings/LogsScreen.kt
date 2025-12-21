@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package app.vitune.android.ui.screens.settings
 
 import android.content.Intent
@@ -57,6 +59,7 @@ import app.vitune.core.ui.LocalAppearance
 import app.vitune.core.ui.surface
 import app.vitune.core.ui.utils.ActivityIntentBundleAccessor
 import kotlinx.coroutines.delay
+import kotlin.time.ExperimentalTime
 
 @Route
 @Composable

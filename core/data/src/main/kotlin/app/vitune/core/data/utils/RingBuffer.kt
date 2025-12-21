@@ -1,8 +1,6 @@
 package app.vitune.core.data.utils
 
 import android.net.Uri
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 
 open class RingBuffer<T>(val size: Int, private val init: (index: Int) -> T) : Iterable<T> {
     private val list = MutableList(size, init)
@@ -29,23 +27,17 @@ class UriCache<Key : Any, Meta>(size: Int = 16) {
     data class CachedUri<Key, Meta> internal constructor(
         val key: Key,
         val meta: Meta,
-        val uri: Uri,
-        val validUntil: Instant?
+        val uri: Uri
     )
 
-    operator fun get(key: Key) = buffer.find {
-        it != null && it.key == key && (it.validUntil == null || it.validUntil > Clock.System.now())
-    }
+    operator fun get(key: Key) = buffer.find { it != null && it.key == key }
 
     fun push(
         key: Key,
         meta: Meta,
-        uri: Uri,
-        validUntil: Instant?
+        uri: Uri
     ) {
-        if (validUntil != null && validUntil <= Clock.System.now()) return
-
-        buffer += CachedUri(key, meta, uri, validUntil)
+        buffer += CachedUri(key, meta, uri)
     }
 
     fun clear() = buffer.clear()

@@ -29,7 +29,7 @@ abstract class NotificationChannels {
     @OptIn(UnstableApi::class)
     inner class Channel internal constructor(
         val id: String,
-        @StringRes
+        @param:StringRes
         val description: Int,
         val notificationId: Int? = null,
         val importance: @Importance Int,
@@ -71,7 +71,7 @@ abstract class NotificationChannels {
             }
         }
 
-        context(Service)
+        context(s: Service)
         fun startForeground(
             context: Context,
             notification: NotificationCompat.Builder.() -> NotificationCompat.Builder
@@ -79,7 +79,7 @@ abstract class NotificationChannels {
             handler.post {
                 upsertChannel(context)
                 val (id, notif) = createNotification(context, notification)
-                startForeground(id, notif)
+                s.startForeground(id, notif)
             }
         }
 
@@ -104,9 +104,9 @@ abstract class NotificationChannels {
         return random
     }
 
-    context(Application)
+    context(application: Application)
     fun createAll() = handler.post {
-        mutableChannels.forEach { it.upsertChannel(this@Application) }
+        mutableChannels.forEach { it.upsertChannel(application) }
     }
 
     @OptIn(UnstableApi::class)

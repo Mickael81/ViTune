@@ -88,12 +88,18 @@ formatting:
     active: false # Handled by Android Lint
   MultiLineIfElse:
     active: false
+  NoUnusedImports:
+    active: false # Broken, thanks context parameters!
+  SpacingAroundColon:
+    active: false # Broken
   TrailingCommaOnCallSite:
     active: true
     useTrailingCommaOnCallSite: false
   TrailingCommaOnDeclarationSite:
     active: true
     useTrailingCommaOnDeclarationSite: false
+  Wrapping:
+    active: false # Broken
 
 naming:
   EnumNaming:

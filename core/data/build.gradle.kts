@@ -21,10 +21,9 @@ kotlin {
 
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xcontext-receivers",
+            "-Xcontext-parameters",
             "-Xnon-local-break-continue",
-            "-Xconsistent-data-class-copy-visibility",
-            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
+            "-Xconsistent-data-class-copy-visibility"
         )
     }
 }

@@ -123,6 +123,8 @@ import coil3.disk.directory
 import coil3.memory.MemoryCache
 import coil3.request.crossfade
 import coil3.util.DebugLogger
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
 import com.kieronquinn.monetcompat.core.MonetActivityAccessException
 import com.kieronquinn.monetcompat.core.MonetCompat
 import com.kieronquinn.monetcompat.interfaces.MonetColorsChangedListener
@@ -134,6 +136,7 @@ import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 private const val TAG = "MainActivity"
 private val coroutineScope = CoroutineScope(Dispatchers.IO)
@@ -441,7 +444,7 @@ class MainActivity : ComponentActivity(), MonetColorsChangedListener {
     }
 }
 
-context(Context)
+context(context: Context)
 @Suppress("CyclomaticComplexMethod")
 fun handleUrl(
     uri: Uri,
@@ -467,7 +470,7 @@ fun handleUrl(
                         page.songsPage?.items?.firstOrNull()?.album?.endpoint?.browseId
                             ?.let { albumRoute.ensureGlobal(it) }
                     } ?: withContext(Dispatchers.Main) {
-                    toast(getString(R.string.error_url, uri))
+                    context.toast(context.getString(R.string.error_url, uri))
                 }
                 else playlistRoute.ensureGlobal(
                     p0 = browseId,
@@ -486,7 +489,7 @@ fun handleUrl(
                 uri.host == "youtu.be" -> path
                 else -> {
                     withContext(Dispatchers.Main) {
-                        toast(getString(R.string.error_url, uri))
+                        context.toast(context.getString(R.string.error_url, uri))
                     }
                     null
                 }
@@ -518,11 +521,11 @@ class MainApplication : Application(), SingletonImageLoader.Factory, Configurati
                 .penaltyDeath()
                 .build()
         )
+        Dependencies.init(this)
 
         MonetCompat.debugLog = BuildConfig.DEBUG
         super.onCreate()
 
-        Dependencies.init(this)
         MonetCompat.enablePaletteCompat()
         ServiceNotifications.createAll()
     }
@@ -555,11 +558,34 @@ object Dependencies {
     lateinit var application: MainApplication
         private set
 
+    val py by lazy {
+        if (!Python.isStarted()) Python.start(AndroidPlatform(application))
+        Python.getInstance()
+    }
+
+    private val module by lazy { py.getModule("download") }
+
+    val quickjsPath by lazy {
+        File(application.applicationInfo.nativeLibraryDir, "libqjs.so")
+            .also { if (!it.canExecute()) it.setExecutable(true) }
+    }
+
+    fun runDownload(id: String): String = module
+        .callAttr("download", quickjsPath.absolutePath, id)
+        .toString()
+
+    fun upgradeYoutubeDl(packageName: String = "yt-dlp"): Boolean {
+        val success = runCatching { module.callAttr("upgrade", packageName) }
+            .also { it.exceptionOrNull()?.printStackTrace() }
+            .isSuccess
+        if (!success) Log.e("Python", "Upgrading $packageName resulted in non-zero exit code!")
+        return success
+    }
+
     val credentialManager by lazy { CredentialManager.create(application) }
 
     internal fun init(application: MainApplication) {
         this.application = application
-        DatabaseInitializer()
     }
 }
 

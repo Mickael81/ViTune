@@ -27,6 +27,7 @@ enum class NothingDevice(val tag: String, val progressChannel: Int) {
     Phone1(tag = Glyph.DEVICE_20111, progressChannel = Glyph.Code_20111.D1_1),
     Phone2(tag = Glyph.DEVICE_22111, progressChannel = Glyph.Code_22111.C1_1),
     Phone2a(tag = Glyph.DEVICE_23111, progressChannel = Glyph.Code_23111.C_1),
+    Phone2aPro(tag = Glyph.DEVICE_23113, progressChannel = Glyph.Code_23111.C_1),
 
     // phone(3a) is identical to phone(3a) Pro, at least under the hood
     Phone3a(tag = Glyph.DEVICE_24111, progressChannel = Glyph.Code_24111.C_1)
@@ -37,6 +38,7 @@ val nothingDevice
         Common.is20111() -> NothingDevice.Phone1
         Common.is22111() -> NothingDevice.Phone2
         Common.is23111() -> NothingDevice.Phone2a
+        Common.is23113() -> NothingDevice.Phone2aPro
         Common.is24111() -> NothingDevice.Phone3a
         else -> null
     }

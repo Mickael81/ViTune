@@ -1,11 +1,14 @@
 package app.vitune.android.ui.screens.player
 
+import android.content.ClipData
+import android.content.ClipDescription
 import android.text.format.Formatter
 import androidx.annotation.OptIn
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,11 +24,13 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.Clipboard
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,22 +41,14 @@ import app.vitune.android.Database
 import app.vitune.android.LocalPlayerServiceBinder
 import app.vitune.android.R
 import app.vitune.android.models.Format
-import app.vitune.android.service.PlayerService
-import app.vitune.android.ui.components.themed.SecondaryTextButton
 import app.vitune.android.utils.color
 import app.vitune.android.utils.medium
 import app.vitune.core.ui.LocalAppearance
 import app.vitune.core.ui.onOverlay
 import app.vitune.core.ui.overlay
-import app.vitune.providers.innertube.Innertube
-import app.vitune.providers.innertube.models.bodies.PlayerBody
-import app.vitune.providers.innertube.requests.player
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 
 @OptIn(UnstableApi::class)
@@ -69,6 +66,7 @@ fun StatsForNerds(
     val (colorPalette, typography) = LocalAppearance.current
     val context = LocalContext.current
     val binder = LocalPlayerServiceBinder.current
+    val clipboardManager = LocalClipboard.current
 
     val coroutineScope = rememberCoroutineScope()
 
@@ -78,46 +76,12 @@ fun StatsForNerds(
 
     var format by remember { mutableStateOf<Format?>(null) }
 
-    var hasReloaded by rememberSaveable { mutableStateOf(false) }
-
-    suspend fun reload(binder: PlayerService.Binder) {
-        binder.player.currentMediaItem
-            ?.takeIf { it.mediaId == mediaId }
-            ?.let { mediaItem ->
-                withContext(Dispatchers.IO) {
-                    delay(2000)
-
-                    Innertube
-                        .player(PlayerBody(videoId = mediaId))
-                        ?.onSuccess { response ->
-                            response?.streamingData?.highestQualityFormat?.let { format ->
-                                Database.insert(mediaItem)
-                                Database.insert(
-                                    Format(
-                                        songId = mediaId,
-                                        itag = format.itag,
-                                        mimeType = format.mimeType,
-                                        bitrate = format.bitrate,
-                                        loudnessDb = response.playerConfig?.audioConfig?.normalizedLoudnessDb,
-                                        contentLength = format.contentLength,
-                                        lastModified = format.lastModified
-                                    )
-                                )
-                            }
-                        }
-                }
-            }
-    }
-
-    LaunchedEffect(binder, mediaId) {
-        val currentBinder = binder ?: return@LaunchedEffect
-
+    LaunchedEffect(mediaId) {
         Database
             .format(mediaId)
             .distinctUntilChanged()
             .collectLatest { currentFormat ->
                 if (currentFormat?.itag != null) format = currentFormat
-                else reload(currentBinder)
             }
     }
 
@@ -158,10 +122,14 @@ fun StatsForNerds(
             modifier = Modifier.padding(all = 16.dp)
         ) {
             @Composable
-            fun Text(text: String) = BasicText(
+            fun Text(
+                text: String,
+                modifier: Modifier = Modifier
+            ) = BasicText(
                 text = text,
                 maxLines = 1,
-                style = typography.xs.medium.color(colorPalette.onOverlay)
+                style = typography.xs.medium.color(colorPalette.onOverlay),
+                modifier = modifier
             )
 
             Column(horizontalAlignment = Alignment.End) {
@@ -174,7 +142,14 @@ fun StatsForNerds(
             }
 
             Column {
-                Text(text = mediaId)
+                Text(
+                    text = mediaId,
+                    modifier = Modifier.clickable {
+                        coroutineScope.launch {
+                            clipboardManager.setText(mediaId)
+                        }
+                    }
+                )
                 Text(text = format?.itag?.toString() ?: stringResource(R.string.unknown))
                 Text(
                     text = when (val rate = format?.bitrate) {
@@ -207,19 +182,21 @@ fun StatsForNerds(
                 )
             }
         }
-
-        binder?.let {
-            SecondaryTextButton(
-                text = stringResource(R.string.reload),
-                onClick = {
-                    hasReloaded = true
-
-                    coroutineScope.launch {
-                        reload(it)
-                    }
-                },
-                enabled = !hasReloaded
-            )
-        }
     }
 }
+
+suspend fun Clipboard.setText(
+    text: String,
+    description: String? = null,
+    mimeTypes: List<String> = listOf("text/plain")
+) = setClipEntry(
+    ClipEntry(
+        ClipData(
+            /* description = */ ClipDescription(
+                /* label = */ description ?: text,
+                /* mimeTypes = */ mimeTypes.toTypedArray()
+            ),
+            /* item = */ ClipData.Item(text)
+        )
+    )
+)

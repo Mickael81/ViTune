@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.compose.compiler.gradle.ComposeFeatureFlag
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 
 plugins {
@@ -6,7 +5,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.chaquo)
 }
 
 android {
@@ -15,22 +16,39 @@ android {
     namespace = appId
     compileSdk = 36
 
+    val abis = listOf("arm64-v8a", "x86_64")
+    val cmakeVersion = "4.1.2"
+    ndkVersion = "29.0.14206865"
+
     defaultConfig {
         applicationId = appId
 
-        minSdk = 21
+        minSdk = 24
         targetSdk = 36
 
-        versionCode = System.getenv("ANDROID_VERSION_CODE")?.toIntOrNull() ?: 16
+        versionCode = System.getenv("ANDROID_VERSION_CODE")?.toIntOrNull() ?: 18
         versionName = project.version.toString()
 
         multiDexEnabled = true
+
+        ndk {
+            //noinspection ChromeOsAbiSupport
+            abiFilters += abis
+        }
+
+        @Suppress("UnstableApiUsage")
+        externalNativeBuild {
+            cmake {
+                arguments += listOf("-DANDROID_STL=c++_static")
+            }
+        }
     }
 
     splits {
         abi {
+            isEnable = true
             reset()
-            isUniversalApk = true
+            isUniversalApk = false
         }
     }
 
@@ -82,11 +100,47 @@ android {
 
     packaging {
         resources.excludes.add("META-INF/**/*")
+        jniLibs.useLegacyPackaging = true
     }
 
     androidResources {
         @Suppress("UnstableApiUsage")
         generateLocaleConfig = true
+    }
+
+    externalNativeBuild {
+        cmake {
+            version = cmakeVersion
+            path = file("src/main/cpp/CMakeLists.txt")
+        }
+    }
+}
+
+afterEvaluate {
+    val jniLibs = file("${layout.projectDirectory}/src/main/jniLibs").also { it.mkdirs() }
+    android.buildTypes.forEach { type ->
+        val typeCapitalized = type.name.let {
+            it.first().uppercase() + it.substring(1)
+        }
+
+        tasks.named("assemble${typeCapitalized}").configure {
+            doFirst {
+                val cxxDir =
+                    file("${layout.buildDirectory.get()}/intermediates/cxx/${if (typeCapitalized == "Debug") "Debug" else "RelWithDebInfo"}")
+
+                cxxDir.walkTopDown().forEach cxx@{ f ->
+                    if (f.name != "qjs") return@cxx
+
+                    f.copyTo(
+                        target = jniLibs
+                            .resolve(f.parentFile.name)
+                            .also { it.mkdirs() }
+                            .resolve("libqjs.so"), // disguise because fuck you
+                        overwrite = true
+                    )
+                }
+            }
+        }
     }
 }
 
@@ -94,13 +148,12 @@ kotlin {
     jvmToolchain(libs.versions.jvm.get().toInt())
 
     compilerOptions {
-        languageVersion.set(KotlinVersion.KOTLIN_2_2)
+        languageVersion.set(KotlinVersion.KOTLIN_2_5)
 
         freeCompilerArgs.addAll(
-            "-Xcontext-receivers",
+            "-Xcontext-parameters",
             "-Xnon-local-break-continue",
-            "-Xconsistent-data-class-copy-visibility",
-            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
+            "-Xconsistent-data-class-copy-visibility"
         )
     }
 }
@@ -110,14 +163,21 @@ ksp {
 }
 
 composeCompiler {
-    featureFlags = setOf(
-        ComposeFeatureFlag.OptimizeNonSkippingGroups
-    )
-
     if (project.findProperty("enableComposeCompilerReports") == "true") {
         val dest = layout.buildDirectory.dir("compose_metrics")
         metricsDestination = dest
         reportsDestination = dest
+    }
+}
+
+chaquopy {
+    defaultConfig {
+        version = "3.13"
+        pip {
+            install("yt-dlp>=2025.12.8")
+            install("yt-dlp-ejs")
+            install("pip")
+        }
     }
 }
 

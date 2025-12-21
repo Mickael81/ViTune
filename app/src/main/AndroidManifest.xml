@@ -187,6 +187,11 @@
         </service>
 
         <receiver
+            android:name=".service.PlayerService$NotificationActionReceiver"
+            android:exported="true"
+            tools:ignore="Instantiatable" />
+
+        <receiver
             android:name="androidx.media3.session.MediaButtonReceiver"
             android:exported="true">
 

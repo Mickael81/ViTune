@@ -92,8 +92,8 @@ data class Context(
             private val YTCFG_REGEX = "ytcfg\\.set\\s*\\(\\s*(\\{[\\s\\S]+?\\})\\s*\\)".toRegex()
         }
 
-        context(HttpMessageBuilder)
-        fun apply() {
+        context(builder: HttpMessageBuilder)
+        fun apply() = with(builder) {
             userAgent?.let { userAgent(it) }
 
             headers {
@@ -142,7 +142,7 @@ data class Context(
         val lockedSafetyMode: Boolean = false
     )
 
-    context(HttpMessageBuilder)
+    context(_: HttpMessageBuilder)
     fun apply() = client.apply()
 
     companion object {

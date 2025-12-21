@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
@@ -35,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.vitune.android.Database
 import app.vitune.android.DatabaseInitializer
+import app.vitune.android.Dependencies
 import app.vitune.android.LocalPlayerServiceBinder
 import app.vitune.android.R
 import app.vitune.android.preferences.AppearancePreferences
@@ -55,11 +55,15 @@ import app.vitune.android.utils.smoothScrollToBottom
 import app.vitune.android.utils.toast
 import app.vitune.core.ui.utils.isAtLeastAndroid12
 import app.vitune.core.ui.utils.isAtLeastAndroid6
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlin.math.roundToInt
 import kotlin.system.exitProcess
+import androidx.core.net.toUri
+import app.vitune.android.DatabaseDependency
 
 @SuppressLint("BatteryLife")
 @Route
@@ -222,13 +226,13 @@ fun OtherSettings() {
                     try {
                         activityResultLauncher.launch(
                             Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
-                                data = Uri.parse("package:${context.packageName}")
+                                data = "package:${context.packageName}".toUri()
                             }
                         )
-                    } catch (e: ActivityNotFoundException) {
+                    } catch (_: ActivityNotFoundException) {
                         try {
                             activityResultLauncher.launch(Intent(Settings.ACTION_IGNORE_BATTERY_OPTIMIZATION_SETTINGS))
-                        } catch (e: ActivityNotFoundException) {
+                        } catch (_: ActivityNotFoundException) {
                             context.toast(context.getString(R.string.no_battery_optimization_settings_found))
                         }
                     }
@@ -266,15 +270,48 @@ fun OtherSettings() {
             ) {
                 val troubleshootScope = rememberCoroutineScope()
                 var reloading by rememberSaveable { mutableStateOf(false) }
+                var upgrading by rememberSaveable { mutableStateOf(false) }
+
+                SecondaryTextButton(
+                    text = stringResource(R.string.upgrade_yt_dlp),
+                    onClick = {
+                        upgrading = true
+                        context.toast(R.string.please_wait)
+                        val job = troubleshootScope.launch {
+                            val success = runCatching {
+                                withContext(Dispatchers.IO) {
+                                    Dependencies.upgradeYoutubeDl()
+                                }
+                            }.also { it.exceptionOrNull()?.printStackTrace() }.getOrNull()
+
+                            withContext(Dispatchers.Main) {
+                                context.toast(
+                                    if (success == true) R.string.yt_dlp_success
+                                    else R.string.yt_dlp_fail
+                                )
+                            }
+                        }
+                        job.invokeOnCompletion { upgrading = false }
+                    },
+                    enabled = !reloading && !upgrading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp)
+                        .padding(horizontal = 16.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
 
                 SecondaryTextButton(
                     text = stringResource(R.string.reload_app_internals),
                     onClick = {
                         if (!reloading) troubleshootScope.launch {
                             reloading = true
-                            context.stopService(context.intent<PrecacheService>())
+                            with(context) {
+                                stopService(intent<PrecacheService>())
+                            }
                             binder?.restartForegroundOrStop()
-                            DatabaseInitializer.reload()
+                            DatabaseDependency.reload()
                             reloading = false
                         }
                     },

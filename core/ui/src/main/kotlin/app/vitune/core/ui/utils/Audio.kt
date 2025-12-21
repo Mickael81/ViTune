@@ -1,5 +1,6 @@
 package app.vitune.core.ui.utils
 
+import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -10,7 +11,8 @@ import androidx.core.content.ContextCompat
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 
-fun Context.streamVolumeFlow(
+context(context: Context)
+fun streamVolumeFlow(
     stream: Int = AudioManager.STREAM_MUSIC,
     @ContextCompat.RegisterReceiverFlags
     flags: Int = ContextCompat.RECEIVER_NOT_EXPORTED
@@ -23,12 +25,14 @@ fun Context.streamVolumeFlow(
     }
 
     ContextCompat.registerReceiver(
-        /* context = */ this@Context,
+        /* context = */ context,
         /* receiver = */ receiver,
         /* filter = */ IntentFilter(VolumeChangedIntentBundleAccessor.ACTION),
+
+        @SuppressLint("WrongConstant") // thanks android lint, very cool
         /* flags = */ flags
     )
-    awaitClose { unregisterReceiver(receiver) }
+    awaitClose { context.unregisterReceiver(receiver) }
 }
 
 class VolumeChangedIntentBundleAccessor(val bundle: Bundle = Bundle()) : BundleAccessor {

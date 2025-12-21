@@ -9,13 +9,18 @@ import android.graphics.drawable.Icon
 import android.util.Log
 import androidx.core.content.ContextCompat
 import app.vitune.core.ui.utils.isAtLeastAndroid6
+import kotlin.concurrent.atomics.AtomicInt
+import kotlin.concurrent.atomics.ExperimentalAtomicApi
+import kotlin.concurrent.atomics.fetchAndIncrement
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
 abstract class ActionReceiver(private val base: String) : BroadcastReceiver() {
+    @OptIn(ExperimentalAtomicApi::class)
     companion object {
-        const val REQUEST_CODE = 100
+        private val requestCode = AtomicInt(100)
+        val nextCode = requestCode.fetchAndIncrement()
     }
 
     class Action internal constructor(
@@ -25,12 +30,12 @@ abstract class ActionReceiver(private val base: String) : BroadcastReceiver() {
         val contentDescription: String?,
         internal val onReceive: (Context, Intent) -> Unit
     ) {
-        context(Context)
+        context(context: Context)
         val pendingIntent: PendingIntent
             get() = PendingIntent.getBroadcast(
-                /* context = */ this@Context,
-                /* requestCode = */ REQUEST_CODE,
-                /* intent = */ Intent(value).setPackage(packageName),
+                /* context = */ context,
+                /* requestCode = */ nextCode,
+                /* intent = */ Intent(value).setPackage(context.packageName),
                 /* flags = */ PendingIntent.FLAG_UPDATE_CURRENT or
                     (if (isAtLeastAndroid6) PendingIntent.FLAG_IMMUTABLE else 0)
             )
@@ -64,18 +69,16 @@ abstract class ActionReceiver(private val base: String) : BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context, intent: Intent) {
-        mutableActions[intent.action]?.onReceive?.let { it(context, intent) }
+        val action = mutableActions[intent.action]
+        if (action == null) {
+            Log.w("ActionReceiver", "ActionReceiver $this got invalid action ${intent.action} (intent=$intent)!")
+            return
+        }
+        action.onReceive(context, intent)
     }
 
-    context(Context)
-    @JvmName("_register")
+    context(context: Context)
     fun register(
-        @ContextCompat.RegisterReceiverFlags
-        flags: Int = ContextCompat.RECEIVER_NOT_EXPORTED
-    ) = register(this@Context, flags)
-
-    fun register(
-        context: Context,
         @ContextCompat.RegisterReceiverFlags
         flags: Int = ContextCompat.RECEIVER_NOT_EXPORTED
     ) {

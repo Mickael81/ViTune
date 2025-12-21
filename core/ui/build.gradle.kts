@@ -16,13 +16,6 @@ android {
     sourceSets.all {
         kotlin.srcDir("src/$name/kotlin")
     }
-
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf(
-            "-Xcontext-receivers",
-            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
-        )
-    }
 }
 
 dependencies {
@@ -46,4 +39,10 @@ dependencies {
 
 kotlin {
     jvmToolchain(libs.versions.jvm.get().toInt())
+
+    compilerOptions {
+        freeCompilerArgs.addAll(
+            "-Xcontext-parameters"
+        )
+    }
 }

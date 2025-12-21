@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalTime::class)
+
 package app.vitune.android.utils
 
 import android.os.Parcel
@@ -16,17 +18,19 @@ import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format.Padding
 import kotlinx.datetime.format.char
 import kotlinx.datetime.toInstant
 import kotlinx.parcelize.Parceler
 import kotlinx.parcelize.Parcelize
 import kotlinx.parcelize.WriteWith
 import java.io.IOException
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 private val logcatDateTimeFormat = LocalDateTime.Format {
     date(
@@ -35,7 +39,7 @@ private val logcatDateTimeFormat = LocalDateTime.Format {
             char('-')
             monthNumber()
             char('-')
-            dayOfMonth()
+            day(padding = Padding.ZERO)
         }
     )
 
@@ -99,7 +103,7 @@ sealed interface Logcat : Parcelable {
             while (ctx.isActive) {
                 try {
                     emit((reader.readLine() ?: break).toLine(id++))
-                } catch (e: IOException) {
+                } catch (_: IOException) {
                     break
                 }
             }

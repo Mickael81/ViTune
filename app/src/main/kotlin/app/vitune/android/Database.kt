@@ -5,6 +5,9 @@ import android.database.SQLException
 import android.database.sqlite.SQLiteDatabase.CONFLICT_IGNORE
 import android.os.Parcel
 import androidx.annotation.OptIn
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.core.database.getFloatOrNull
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
@@ -32,6 +35,11 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.sqlite.db.SupportSQLiteQuery
+import app.vitune.android.DatabaseInitializer.From10To11Migration
+import app.vitune.android.DatabaseInitializer.From14To15Migration
+import app.vitune.android.DatabaseInitializer.From22To23Migration
+import app.vitune.android.DatabaseInitializer.From23To24Migration
+import app.vitune.android.DatabaseInitializer.From8To9Migration
 import app.vitune.android.models.Album
 import app.vitune.android.models.Artist
 import app.vitune.android.models.Event
@@ -60,12 +68,46 @@ import app.vitune.core.data.enums.SortOrder
 import app.vitune.core.ui.utils.songBundle
 import io.ktor.http.Url
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+
+object DatabaseDependency {
+    private var _instance by mutableStateOf(buildDatabase())
+    private val mutex = Mutex()
+    val instance get() = _instance
+
+    private fun buildDatabase() = Room
+        .databaseBuilder(
+            context = Dependencies.application.applicationContext,
+            klass = DatabaseInitializer::class.java,
+            name = "data.db"
+        )
+        .addMigrations(
+            From8To9Migration(),
+            From10To11Migration(),
+            From14To15Migration(),
+            From22To23Migration(),
+            From23To24Migration()
+        )
+        .build()
+
+    // Unfortunately, this HAS to block with the current architecture
+    fun reload() = runBlocking {
+        mutex.withLock {
+            _instance = buildDatabase()
+        }
+    }
+}
+
+@Dao // WHY WHY WHY WHY
+interface Database {
+    companion object : DatabaseAccessor by DatabaseDependency.instance.database
+}
 
 @Dao
 @Suppress("TooManyFunctions")
-interface Database {
-    companion object : Database by DatabaseInitializer.instance.database
-
+interface DatabaseAccessor {
     @Transaction
     @Query("SELECT * FROM Song WHERE id NOT LIKE '$LOCAL_KEY_PREFIX%' ORDER BY ROWID ASC")
     @RewriteQueriesToDropUnusedColumns
@@ -336,7 +378,6 @@ interface Database {
     @Query("SELECT * FROM Playlist WHERE id = :id")
     fun playlist(id: Long): Flow<Playlist?>
 
-    // TODO: apparently this is an edge-case now?
     @RewriteQueriesToDropUnusedColumns
     @Transaction
     @Query(
@@ -347,7 +388,7 @@ interface Database {
         ORDER BY SortedSongPlaylistMap.position
         """
     )
-    fun playlistSongs(id: Long): Flow<List<Song>?>
+    fun playlistSongs(id: Long): Flow<List<Song>>
 
     @Transaction
     @Query("SELECT * FROM Playlist WHERE id = :id")
@@ -436,7 +477,7 @@ interface Database {
         LIMIT 4
         """
     )
-    fun playlistThumbnailUrls(id: Long): Flow<List<String?>>
+    fun playlistThumbnailUrls(id: Long): Flow<List<String>>
 
     @Transaction
     @Query(
@@ -814,35 +855,7 @@ interface Database {
 )
 @TypeConverters(Converters::class)
 abstract class DatabaseInitializer protected constructor() : RoomDatabase() {
-    abstract val database: Database
-
-    companion object {
-        @Volatile
-        lateinit var instance: DatabaseInitializer
-
-        private fun buildDatabase() = Room
-            .databaseBuilder(
-                context = Dependencies.application.applicationContext,
-                klass = DatabaseInitializer::class.java,
-                name = "data.db"
-            )
-            .addMigrations(
-                From8To9Migration(),
-                From10To11Migration(),
-                From14To15Migration(),
-                From22To23Migration(),
-                From23To24Migration()
-            )
-            .build()
-
-        operator fun invoke() {
-            if (!::instance.isInitialized) reload()
-        }
-
-        fun reload() = synchronized(this) {
-            instance = buildDatabase()
-        }
-    }
+    abstract val database: DatabaseAccessor
 
     @DeleteTable.Entries(DeleteTable(tableName = "QueuedMediaItem"))
     class From3To4Migration : AutoMigrationSpec
@@ -1115,16 +1128,13 @@ object Converters {
 }
 
 @Suppress("UnusedReceiverParameter")
-val Database.internal: RoomDatabase
-    get() = DatabaseInitializer.instance
+val DatabaseAccessor.internal: RoomDatabase
+    get() = DatabaseDependency.instance
 
-fun query(block: () -> Unit) = DatabaseInitializer.instance.queryExecutor.execute(block)
+fun query(block: () -> Unit) = DatabaseDependency.instance.queryExecutor.execute(block)
 
-fun transaction(block: () -> Unit) = with(DatabaseInitializer.instance) {
+fun transaction(block: () -> Unit) = with(DatabaseDependency.instance) {
     transactionExecutor.execute {
         runInTransaction(block)
     }
 }
-
-val RoomDatabase.path: String?
-    get() = openHelper.writableDatabase.path

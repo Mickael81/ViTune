@@ -1,6 +1,5 @@
 package app.vitune.providers.innertube.models
 
-import app.vitune.providers.innertube.Innertube
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 
@@ -15,16 +14,6 @@ data class PlayerResponse(
     @Transient
     val cpn: String? = null
 ) {
-    val reason
-        get() = if (playabilityStatus != null && playabilityStatus.status != "OK") buildString {
-            appendLine("YouTube responded with status '${playabilityStatus.reason.orEmpty()}'")
-            playabilityStatus.reason?.let { appendLine("Reason: $it") }
-            playabilityStatus.errorScreen?.playerErrorMessageRenderer?.subreason?.text?.let {
-                appendLine()
-                appendLine(it)
-            }
-        } else null
-
     @Serializable
     data class PlayabilityStatus(
         val status: String? = null,
@@ -73,10 +62,7 @@ data class PlayerResponse(
             val audioSampleRate: Int?,
             val url: String?,
             val signatureCipher: String?
-        ) {
-            suspend fun findUrl(context: Context) =
-                url ?: signatureCipher?.let { Innertube.decodeSignatureCipher(context, it) }
-        }
+        )
     }
 
     @Serializable

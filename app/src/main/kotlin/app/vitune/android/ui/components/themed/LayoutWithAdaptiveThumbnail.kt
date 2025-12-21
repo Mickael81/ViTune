@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.movableContentOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,17 +25,22 @@ import coil3.compose.AsyncImage
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-inline fun LayoutWithAdaptiveThumbnail(
+fun LayoutWithAdaptiveThumbnail(
     thumbnailContent: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
-) = if (isLandscape) Row(
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = modifier
 ) {
-    thumbnailContent()
-    content()
-} else Box(modifier = modifier) { content() }
+    val content = remember { movableContentOf(content) }
+    val thumbnailContent = remember { movableContentOf(thumbnailContent) }
+
+    if (isLandscape) Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+    ) {
+        thumbnailContent()
+        content()
+    } else Box(modifier = modifier) { content() }
+}
 
 fun adaptiveThumbnailContent(
     isLoading: Boolean,

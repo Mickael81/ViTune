@@ -15,8 +15,6 @@ dependencies {
     implementation(libs.ktor.client.encoding)
     implementation(libs.ktor.client.serialization)
     implementation(libs.ktor.serialization.json)
-
-    implementation(libs.rhino)
     implementation(libs.log4j)
 
     detektPlugins(libs.detekt.compose)
@@ -28,8 +26,7 @@ kotlin {
 
     compilerOptions {
         freeCompilerArgs.addAll(
-            "-Xcontext-receivers",
-            "-Xsuppress-warning=CONTEXT_RECEIVERS_DEPRECATED"
+            "-Xcontext-parameters"
         )
     }
 }

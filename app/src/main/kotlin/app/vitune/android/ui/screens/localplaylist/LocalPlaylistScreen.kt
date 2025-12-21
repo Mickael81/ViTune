@@ -47,7 +47,6 @@ fun LocalPlaylistScreen(playlistId: Long) {
             LaunchedEffect(Unit) {
                 Database
                     .playlistSongs(playlistId)
-                    .filterNotNull()
                     .distinctUntilChanged()
                     .collect { songs = it.toImmutableList() }
             }

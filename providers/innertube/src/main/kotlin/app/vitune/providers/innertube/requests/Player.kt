@@ -16,6 +16,7 @@ import kotlinx.coroutines.isActive
 
 private suspend fun Innertube.tryContexts(
     body: PlayerBody,
+    checkIsValid: Boolean,
     vararg contexts: Context
 ): PlayerResponse? {
     contexts.forEach { context ->
@@ -28,12 +29,7 @@ private suspend fun Innertube.tryContexts(
                 setBody(
                     body.copy(
                         context = context,
-                        cpn = cpn,
-                        playbackContext = PlayerBody.PlaybackContext(
-                            contentPlaybackContext = PlayerBody.PlaybackContext.ContentPlaybackContext(
-                                signatureTimestamp = getSignatureTimestamp(context)
-                            )
-                        )
+                        cpn = cpn
                     )
                 )
 
@@ -45,7 +41,7 @@ private suspend fun Innertube.tryContexts(
             }.body<PlayerResponse>().also { logger.info("Got $it") }
         }
             ?.getOrNull()
-            ?.takeIf { it.isValid }
+            ?.takeIf { checkIsValid && it.isValid }
             ?.let {
                 return it.copy(
                     cpn = cpn,
@@ -61,12 +57,16 @@ private val PlayerResponse.isValid
     get() = playabilityStatus?.status == "OK" &&
         streamingData?.adaptiveFormats?.any { it.url != null || it.signatureCipher != null } == true
 
-suspend fun Innertube.player(body: PlayerBody): Result<PlayerResponse?>? = runCatchingCancellable {
+suspend fun Innertube.player(
+    body: PlayerBody,
+    checkIsValid: Boolean = true
+): Result<PlayerResponse?>? = runCatchingCancellable {
     tryContexts(
         body = body,
+        checkIsValid = checkIsValid,
         Context.DefaultIOS,
         Context.DefaultWeb,
-        Context.DefaultTV,
-        Context.DefaultAndroidMusic
+        Context.DefaultAndroidMusic,
+        Context.DefaultTV
     )
 }
