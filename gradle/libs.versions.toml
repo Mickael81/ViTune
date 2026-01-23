@@ -2,6 +2,7 @@
 kotlin = "2.3.0"
 ksp = "2.3.4"
 
+#noinspection UnusedVersionCatalogEntry
 jvm = "23"
 agp = "8.13.2"
 
@@ -35,11 +36,11 @@ kotlin_immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutab
 
 compose_bom = { module = "androidx.compose:compose-bom", version = "2025.12.01" }
 compose_animation = { module = "androidx.compose.animation:animation" }
-compose_foundation = { module = "androidx.compose.foundation:foundation", version = "1.10.0" }
+compose_foundation = { module = "androidx.compose.foundation:foundation" }
 compose_ui = { module = "androidx.compose.ui:ui" }
 compose_ui_util = { module = "androidx.compose.ui:ui-util" }
 compose_ui_fonts = { module = "androidx.compose.ui:ui-text-google-fonts" }
-compose_material3 = { module = "androidx.compose.material3:material3", version = "1.4.0" }
+compose_material3 = { module = "androidx.compose.material3:material3" }
 
 compose_activity = { module = "androidx.activity:activity-compose", version = "1.12.2" }
 compose_shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version = "1.3.3" }
@@ -83,5 +84,5 @@ monet = { module = "com.github.KieronQuinn:MonetCompat", version = "0.4.1" }
 
 desugaring = { module = "com.android.tools:desugar_jdk_libs", version = "2.1.5" }
 
-detekt_compose = { module = "io.nlopez.compose.rules:detekt", version = "0.5.2" }
+detekt_compose = { module = "io.nlopez.compose.rules:detekt", version = "0.5.3" }
 detekt_formatting = { module = "io.gitlab.arturbosch.detekt:detekt-formatting", version.ref = "detekt" }
